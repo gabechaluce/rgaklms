@@ -1,0 +1,83 @@
+<head><link rel="icon" type="image/x-icon" href="rga.png"></head>
+<?include 'includes/session.php'; ?>
+
+<div class="col-lg-12">
+    <div class="card card-outline card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Add New Track</h3>
+        </div>
+        <div class="card-body">
+            <form action="" id="manage-track">
+                <input type="hidden" name="id" value="">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" name="date" id="date" class="form-control form-control-sm" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="time">Time</label>
+                            <input type="time" name="time" id="time" class="form-control form-control-sm" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" name="destination" id="destination" class="form-control form-control-sm" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" name="address" id="address" class="form-control form-control-sm" required>
+                </div>
+                <div class="form-group">
+                    <label for="purpose">Purpose</label>
+                    <textarea name="purpose" id="purpose" cols="30" rows="3" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="vehicle">Vehicle</label>
+                    <input type="text" name="vehicle" id="vehicle" class="form-control form-control-sm" required>
+                </div>
+                <div class="form-group">
+                    <label for="driver">Driver</label>
+                    <input type="text" name="driver" id="driver" class="form-control form-control-sm" required>
+                </div>
+                <div class="form-group">
+                    <label for="dept">Department Requested by</label>
+                    <input type="text" name="dept" id="dept" class="form-control form-control-sm" required>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex w-100 justify-content-center align-items-center">
+                <button class="btn btn-flat btn-primary mx-2" form="manage-track">Save</button>
+                <button class="btn btn-flat btn-default mx-2" type="button" onclick="location.href='index.php?page=track_list'">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#manage-track').submit(function(e){
+        e.preventDefault();
+        start_load();
+        $.ajax({
+            url:'ajax.php?action=save_track',
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            type: 'POST',
+            success:function(resp){
+                if(resp==1){
+                    alert_toast("Data successfully saved",'success');
+                    setTimeout(function(){
+                        location.href = 'index.php?page=track_list';
+                    },1500);
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,292 @@
+             /* Add inner border to canvas */
+             .canvas-container::after {
+                content: '';
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                right: 3px;
+                bottom: 3px;
+                border: 1px solid var(--dark);
+                pointer-events: none;
+            }
+            :root {
+                --primary: #4361ee;
+                --primary-dark: #3a56d4;
+                --secondary: #4cc9f0;
+                --danger: #ef476f;
+                --success: #06d6a0;
+                --warning: #ffd166;
+                --dark: #212529;
+                --light: #f8f9fa;
+                --gray: #6c757d;
+                --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                --radius: 8px;
+            }
+            
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+      
+            .app-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .app-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            
+            .app-title {
+                font-size: 2.2rem;
+                color: var(--primary);
+                margin-bottom: 10px;
+            }
+            
+            .app-description {
+                color: var(--gray);
+                font-size: 1rem;
+            }
+            
+            .control-panel {
+                background-color: white;
+                border-radius: var(--radius);
+                padding: 20px;
+                margin-bottom: 30px;
+                box-shadow: var(--shadow);
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            
+            .control-group {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .control-label {
+                font-weight: 500;
+                margin-bottom: 8px;
+                color: var(--dark);
+            }
+            
+            .control-select, .control-input {
+                padding: 12px;
+                border-radius: var(--radius);
+                border: 1px solid #ddd;
+                font-size: 1rem;
+                transition: all 0.3s;
+            }
+            
+            .control-select:focus, .control-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            }
+            
+            .control-button {
+                background-color: var(--primary);
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s;
+                margin-top: auto;
+            }
+            
+            .control-button:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
+            
+            .canvas-wrapper {
+                position: relative;
+            }
+            
+            .canvas-toolbox {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: var(--radius);
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                z-index: 100;
+            }
+            
+            .canvas-tool {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: white;
+                border: 1px solid #ddd;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+            
+            .canvas-tool:hover {
+                background-color: #f0f0f0;
+                transform: scale(1.1);
+            }
+            
+            .container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 30px;
+            }
+            
+            .canvas-container {
+                border-radius: var(--radius);
+                position: relative;
+                width: 960px;
+                height: 480px;
+                display: inline-block;
+                background-color: white;
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+            
+            .canvas-title {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 0.85rem;
+                color: var(--dark);
+                z-index: 5;
+            }
+            
+            .shape {
+                position: absolute;
+                background-color: var(--primary);
+                border: 1px solid rgba(0,0,0,0.2);
+                cursor: move;
+                transition: all 0.2s;
+                z-index: 10;
+            }
+            
+            .circle {
+                border-radius: 50%;
+            }
+            
+            .shape:hover {
+                box-shadow: 0 0 0 2px var(--secondary);
+                z-index: 20;
+            }
+            
+            .shape:hover::after {
+                content: attr(data-size);
+                position: absolute;
+                background: var(--dark);
+                color: white;
+                padding: 6px 10px;
+                border-radius: var(--radius);
+                top: -40px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 12px;
+                white-space: nowrap;
+                z-index: 100;
+                box-shadow: var(--shadow);
+            }
+            
+            .dragging {
+                opacity: 0.8;
+                z-index: 1000;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            }
+            
+            .overlap {
+                background-color: var(--danger) !important;
+            }
+            
+            .triangle.overlap {
+                border-bottom-color: var(--danger) !important;
+            }
+            
+            .grid-line {
+                position: absolute;
+                background-color: rgba(0,0,0,0.05);
+                z-index: 1;
+            }
+            
+            .grid-line-label {
+                position: absolute;
+                color: var(--gray);
+                font-size: 10px;
+                z-index: 2;
+            }
+            
+            /* Toast notification */
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: var(--dark);
+                color: white;
+                padding: 15px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                transition: all 0.3s;
+                transform: translateY(100px);
+                opacity: 0;
+                z-index: 9999;
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .grid-line {
+        position: absolute;
+        background-color: rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+    
+    .grid-line-label {
+        position: absolute;
+        color: var(--gray);
+        font-size: 10px;
+        z-index: 2;
+        pointer-events: none;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 2px 4px;
+        border-radius: 2px;
+    }
+    .shape.selected {
+        outline: 2px dashed red;
+        z-index: 10;
+    }
+    .shape {
+        will-change: transform, top, left;
+    }
+    .content-wrapper {
+        background-color: #fff;
+        min-height: calc(100vh - 100px);
+    }
+    
+    .app-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .canvas-container {
+        width: 100%;
+        max-width: 960px;
+        height: 480px;
+    }
