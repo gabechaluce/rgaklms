@@ -46,6 +46,12 @@
               <input type="text" class="form-control" id="city" name="city">
             </div>
           </div>
+          <div class="form-group">
+            <label for="remarks" class="col-sm-3 control-label">Remarks</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" id="remarks" name="remarks"></textarea>
+            </div>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
@@ -103,6 +109,12 @@
             <label for="edit_city" class="col-sm-3 control-label">City</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="edit_city" name="edit_city">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit_remarks" class="col-sm-3 control-label">Remarks</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" id="edit_remarks" name="edit_remarks"></textarea>
             </div>
           </div>
       </div>

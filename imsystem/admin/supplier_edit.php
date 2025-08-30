@@ -9,6 +9,7 @@ if(isset($_POST['edit'])){
     $contact = $_POST['edit_contact'];
     $address = $_POST['edit_address'];
     $city = $_POST['edit_city'];
+    $remarks = $_POST['edit_remarks'];
     
     $sql = "UPDATE party_info SET 
             firstname = '$firstname', 
@@ -16,7 +17,8 @@ if(isset($_POST['edit'])){
             businessname = '$businessname', 
             contact = '$contact', 
             address = '$address', 
-            city = '$city' 
+            city = '$city',
+            remarks = '$remarks'
             WHERE id = '$id'";
             
     if($conn->query($sql)){

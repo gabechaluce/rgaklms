@@ -92,6 +92,7 @@
                   <label for="customer_name">Customer Name:</label>
                   <input type="text" class="form-control" name="customer_name" id="customer_name" readonly style="background-color: #f9f9f9;">
                 </div>
+                
                 <div class="form-group">
                   <label for="bill_type">Bill Type:</label>
                   <select class="form-control" name="bill_type" id="bill_type" required>

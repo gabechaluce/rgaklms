@@ -8,15 +8,16 @@ if(isset($_POST['add'])){
     $contact = $_POST['contact'];
     $address = $_POST['address'];
     $city = $_POST['city'];
+    $remarks = $_POST['remarks'];
     
-    $sql = "SELECT * FROM party_info WHERE id = '$id'";
+    $sql = "SELECT * FROM party_info WHERE businessname = '$businessname'";
     $query = $conn->query($sql);
     
     if($query->num_rows > 0){
         $_SESSION['error'] = ['Supplier already exists'];
     }
     else{
-        $sql = "INSERT INTO party_info (firstname, lastname, businessname, contact, address, city) VALUES ('$firstname', '$lastname', '$businessname', '$contact', '$address', '$city')";
+        $sql = "INSERT INTO party_info (firstname, lastname, businessname, contact, address, city, remarks) VALUES ('$firstname', '$lastname', '$businessname', '$contact', '$address', '$city', '$remarks')";
         if($conn->query($sql)){
             $_SESSION['success'] = 'Supplier added successfully';
         }
