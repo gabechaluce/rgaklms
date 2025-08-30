@@ -1,4 +1,3 @@
-
 <?php if(!isset($conn)){ include 'db_connect.php'; } ?>
 <body>
 <div class="col-lg-12">
@@ -11,10 +10,38 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="" class="control-label">Name</label>
-            <input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>">
+            <label for="" class="control-label">Project Name</label>
+            <input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" REQUIRED>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="" class="control-label">Customer Name</label>
+         <input type="text" class="form-control form-control-sm" name="full_name" value="<?php echo isset($full_name) ? $full_name : '' ?>" REQUIRED placeholder="Enter customer full name">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="control-label">Location</label>
+         <input type="text" class="form-control form-control-sm" name="location" value="<?php echo isset($location) ? $location : '' ?>" REQUIRED placeholder="Project location">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="control-label">Dimension</label>
+<input type="text" class="form-control form-control-sm" name="dimension" value="<?php echo isset($dimension) ? $dimension : '' ?>" placeholder="e.g., 10m x 8m x 3m">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="control-label">Project Cost</label>
+<input type="number" step="0.01" class="form-control form-control-sm" name="project_cost" value="<?php echo isset($project_cost) ? $project_cost : '' ?>" placeholder="0.00">
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label for="">Status</label>
@@ -32,6 +59,9 @@
                 <input type="text" class="form-control form-control-sm" value="To be reviewed" readonly>
             <?php endif; ?>
         </div>
+    </div>
+    <div class="col-md-6">
+        <!-- Removed bill type field as requested -->
     </div>
 </div>
 <div class="row">
@@ -93,13 +123,13 @@
             $required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
             ?>
             <label for="" class="control-label">Project Coordinator</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" <?php echo $required_attr; ?>>
+            <select class="form-control form-control-sm select2" multiple="multiple" name="coordinator_ids[]" <?php echo $required_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
                 while($row= $employees->fetch_assoc()):
                 ?>
-                <option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+                <option value="<?php echo $row['id'] ?>" <?php echo isset($coordinator_ids) && in_array($row['id'],explode(',',$coordinator_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
                 <?php endwhile; ?>
             </select>
         </div>
@@ -111,26 +141,58 @@
             $required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
             ?>
             <label for="" class="control-label">Designer</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" <?php echo $required_attr; ?>>
+            <select class="form-control form-control-sm select2" multiple="multiple" name="designer_ids[]" <?php echo $required_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 4 order by concat(firstname,' ',lastname) asc ");
                 while($row= $employees->fetch_assoc()):
                 ?>
-                <option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+                <option value="<?php echo $row['id'] ?>" <?php echo isset($designer_ids) && in_array($row['id'],explode(',',$designer_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
                 <?php endwhile; ?>
             </select>
         </div>
     </div>
 </div>
 <div class="row">
- 
-           
+    <div class="col-md-6">
+        <div class="form-group">
+            <?php 
+            $required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+            ?>
+            <label for="" class="control-label">Project Estimator</label>
+            <select class="form-control form-control-sm select2" multiple="multiple" name="estimator_ids[]" <?php echo $required_attr; ?>>
+                <option></option>
+                <?php 
+                $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 6 order by concat(firstname,' ',lastname) asc ");
+                while($row= $employees->fetch_assoc()):
+                ?>
+                <option value="<?php echo $row['id'] ?>" <?php echo isset($estimator_ids) && in_array($row['id'],explode(',',$estimator_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <?php 
+            $required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+            ?>
+            <label for="" class="control-label">Inventory Coordinator</label>
+            <select class="form-control form-control-sm select2" multiple="multiple" name="inventory_ids[]" <?php echo $required_attr; ?>>
+                <option></option>
+                <?php 
+                $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
+                while($row= $employees->fetch_assoc()):
+                ?>
+                <option value="<?php echo $row['id'] ?>" <?php echo isset($inventory_ids) && in_array($row['id'],explode(',',$inventory_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<div class="form-group">
-			<label for="" class="control-label">Description</label>
+			<label for="" class="control-label">Project Description & Equipment List</label>
 			<textarea name="description" cols="30" rows="10" class="summernote form-control" REQUIRED>
 <?php echo isset($description) ? trim($description) : '' ?></textarea>
 		</div>
@@ -140,7 +202,6 @@
 <h6><B>Uploaded Files</B></h6>
     <div id="file-preview-box" class="border p-2 bg-light"></div>
 </div>
-
 
 			</form>
 		</div>
@@ -201,7 +262,9 @@
                 return button.render();
             }
         }
-    });// Helper function to determine file icon based on extension
+    });
+
+// Helper function to determine file icon based on extension
 function getFileIcon(extension) {
     const fileIcons = {
         'pdf': 'fas fa-file-pdf text-danger',
@@ -279,6 +342,7 @@ if (fileType === 'image') {
         }
     });
 }
+
 // Add this after the filePreviewHtml is appended
 $('#file-preview-box').on('click', '.remove-file-btn', function() {
     var $fileDiv = $(this).closest('.uploaded-file');
@@ -302,6 +366,7 @@ $('#file-preview-box').on('click', '.remove-file-btn', function() {
         }
     });
 });
+
 // Helper function to format file size
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
@@ -365,33 +430,7 @@ $(document).ready(function() {
         }
     }
 });
-   // This function is no longer needed as it's replaced by the uploadFile function
-   // but kept for reference or backward compatibility
-   function uploadImage(file) {
-        var data = new FormData();
-        data.append('file', file);
-        $.ajax({
-            url: 'ajax.php?action=upload_image',
-            method: 'POST',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // If the response is a valid URL, insert it into Summernote
-                if (response.startsWith('http') || response.startsWith('/')) {
-                    // Add a cache-buster query param to ensure the new image is loaded
-                    var finalUrl = response + '?t=' + new Date().getTime();
-                    $('.summernote').summernote('insertImage', finalUrl);
-                } else {
-                    alert('Error uploading image: ' + response);
-                }
-            },
-            error: function() {
-                alert('Failed to upload image.');
-            }
-        });
-    }
+
 // Initialize Select2
 	$('.select2').select2({
 		placeholder: "Please select here",
@@ -436,7 +475,7 @@ $(document).ready(function() {
 	});
 });
         
-    </script>
+</script>
 <style>
 
 body, .wrapper, .content-wrapper {
@@ -566,6 +605,29 @@ body, .wrapper, .content-wrapper {
 
 .uploaded-file:hover {
     opacity: 0.8;
+}
+
+/* New field styling */
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Enhanced input styling */
+input[type="number"] {
+    text-align: right;
+}
+
+/* Status badge styling */
+.badge-status {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
 }
 </style>
 </body>

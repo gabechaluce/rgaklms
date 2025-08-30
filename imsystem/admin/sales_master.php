@@ -54,15 +54,27 @@
               <form id="salesForm">
                 <div class="form-group">
                   <label for="project_name">Project Name:</label>
-                  <input type="text" class="form-control" name="project_name" id="project_name" required>
+                  <select class="form-control" name="project_name" id="project_name" required>
+                    <option value="">- Select Project -</option>
+                    <?php
+                      $sql = "SELECT id, name, full_name, location, description FROM project_list WHERE status IN (1,2,3,5) ORDER BY name ASC";
+                      $query = $conn->query($sql);
+                      while($row = $query->fetch_assoc()){
+                        echo "<option value='".$row['id']."' 
+                              data-customer='".$row['full_name']."' 
+                              data-location='".$row['location']."' 
+                              data-description='".$row['description']."'>".$row['name']."</option>";
+                      }
+                    ?>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="module_title">Module Title:</label>
                   <input type="text" class="form-control" name="module_title" id="module_title" required>
                 </div>
                 <div class="form-group">
-                  <label for="location"> Location:</label>
-                  <input type="text" class="form-control" name="location" id="location" required>
+                  <label for="location">Location:</label>
+                  <input type="text" class="form-control" name="location" id="location" readonly style="background-color: #f9f9f9;">
                 </div>
                 <div class="form-group">
                   <label for="remarks">Remarks/Finish:</label>
@@ -70,16 +82,15 @@
                 </div>
                 <div class="form-group">
                   <label for="designer">Designer:</label>
-                  <input type="text" class="form-control" name="designer" id="designer" required>
+                  <input type="text" class="form-control" name="designer" id="designer" readonly style="background-color: #f9f9f9;">
                 </div>
                 <div class="form-group">
                   <label for="dimension">Dimension:</label>
                   <input type="text" class="form-control" name="dimension" id="dimension" required>
                 </div>
-
                 <div class="form-group">
                   <label for="customer_name">Customer Name:</label>
-                  <input type="text" class="form-control" name="customer_name" id="customer_name" required>
+                  <input type="text" class="form-control" name="customer_name" id="customer_name" readonly style="background-color: #f9f9f9;">
                 </div>
                 <div class="form-group">
                   <label for="bill_type">Bill Type:</label>
@@ -104,6 +115,7 @@
                   ?>
                   <input type="text" class="form-control" name="bill_no" id="bill_no" value="<?php echo $bill_no; ?>" readonly>
                 </div>
+
               </form>
             </div>
           </div>
@@ -292,6 +304,46 @@
     }
     loadCart();
 
+    // Project selection change event - NEW FEATURE
+    $('#project_name').change(function(){
+      var projectId = $(this).val();
+      var selectedOption = $(this).find('option:selected');
+      
+      if(projectId != ''){
+        // Auto-fill customer name and location from data attributes
+        $('#customer_name').val(selectedOption.data('customer'));
+        $('#location').val(selectedOption.data('location'));
+       
+        
+        // Fetch designer information from the project
+        $.ajax({
+          type: 'POST',
+          url: 'get_project_details.php', // You'll need to create this file
+          data: {project_id: projectId},
+          dataType: 'json',
+          success: function(response){
+            if(response.success) {
+              $('#designer').val(response.designer);
+              // Optionally set dimension if available
+              if(response.dimension) {
+                $('#dimension').val(response.dimension);
+              }
+            }
+          },
+          error: function(){
+            console.log('Error fetching project details');
+          }
+        });
+      } else {
+        // Clear fields when no project selected
+        $('#customer_name').val('');
+        $('#location').val('');
+        $('#designer').val('');
+    
+        $('#dimension').val('');
+      }
+    });
+
     //Change Category
     $('#inventory_selection').change(function(){
       var inventory_selection = $(this).val();
@@ -467,6 +519,7 @@
 
     // Add to cart button click
     $('#addToCart').click(function(){
+      var project_name_text = $('#project_name option:selected').text();
       var inventory_selection = $('#inventory_selection').val();
       var company_name = $('#company_name').val();
       var product_name = $('#product_name').val();
@@ -475,8 +528,8 @@
       var quantity = $('#quantity').val();
       var total = $('#total').val();
 
-      if(inventory_selection == '' || company_name == '' || product_name == '' || unit == '' || quantity == '' || quantity < 1){
-        alert('Please fill all required fields');
+      if($('#project_name').val() == '' || inventory_selection == '' || company_name == '' || product_name == '' || unit == '' || quantity == '' || quantity < 1){
+        alert('Please fill all required fields including project selection');
         return;
       }
 
@@ -542,14 +595,12 @@
               
               sessionStorage.setItem('cart', JSON.stringify(cart));
               
-              // Reset form fields
+              // Reset product selection fields only, keep project info
               $('#inventory_selection').val('').trigger('change');
               $('#price').val(0);
               $('#quantity').val(1);
               $('#total').val(0);
               $('#stock_status').html('');
-              // Focus on customer name field for next input
-              $('#customer_name').focus();
               
               // Reload cart
               loadCart();
@@ -574,7 +625,8 @@
 
     // Generate bill button click
     $('#generateBill').click(function(){
-      var project_name = $('#project_name').val();
+      var project_id = $('#project_name').val();
+      var project_name = $('#project_name option:selected').text();
       var module_title = $('#module_title').val();
       var location = $('#location').val();
       var remarks = $('#remarks').val();
@@ -584,11 +636,17 @@
       var bill_type = $('#bill_type').val();
       var bill_no = $('#bill_no').val();
       var sale_date = $('#sale_date').val();
+
       var cart = JSON.parse(sessionStorage.getItem('cart'));
       
+      if(project_id == ''){
+        alert('Please select a project');
+        $('#project_name').focus();
+        return;
+      }
+      
       if(customer_name == ''){
-        alert('Please enter customer name');
-        $('#customer_name').focus();
+        alert('Please ensure project has customer name');
         return;
       }
       
@@ -598,7 +656,7 @@
       }
       
       // Confirm before generating bill
-      if(!confirm('Are you sure you want to generate bill for customer: ' + customer_name + '?')) {
+      if(!confirm('Are you sure you want to generate bill for project: ' + project_name + '?')) {
         return;
       }
       
@@ -608,6 +666,7 @@
       
       // Prepare data for submission
       var formData = {
+        project_id: project_id,
         project_name: project_name,
         module_title: module_title,
         location: location, 
@@ -618,6 +677,7 @@
         bill_type: bill_type,
         bill_no: bill_no,
         sale_date: sale_date,
+
         cart: cart
       };
       
@@ -638,6 +698,11 @@
             // Clear cart and reload
             sessionStorage.setItem('cart', JSON.stringify([]));
             loadCart();
+            
+            // Reset form
+            $('#salesForm')[0].reset();
+            $('#sale_date').val('<?php echo date("Y-m-d"); ?>');
+            $('#bill_no').val(response.next_bill_no);
           } else {
             alert('Error: ' + response.message);
           }
@@ -828,6 +893,22 @@ function generateBillNo($id) {
 ?>
 
 <style>
+/* Enhanced styling for readonly fields */
+.form-control[readonly] {
+  background-color: #f9f9f9 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Project info styling */
+.project-info-section {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  border-left: 4px solid #007bff;
+  margin-bottom: 15px;
+}
+
 /* Floating Box for forms and tables */
 .floating-box {
   border-radius: 15px;
@@ -934,7 +1015,7 @@ function generateBillNo($id) {
 }
 
 .receipt-container .text-right {
-  text-align: right;
+  text-right;
 }
 
 .receipt-info {
@@ -971,6 +1052,17 @@ function generateBillNo($id) {
 /* Margin top utility */
 .mt-2 {
   margin-top: 10px;
+}
+
+/* Auto-filled field indication */
+.auto-filled {
+  background-color: #e8f5e8 !important;
+  border-color: #28a745;
+}
+
+.manual-entry {
+  background-color: #fff3cd !important;
+  border-color: #ffc107;
 }
 </style>
 </body>

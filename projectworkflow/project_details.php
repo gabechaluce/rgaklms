@@ -28,7 +28,10 @@
     $cprog = $conn->query("SELECT * FROM task_list WHERE project_id = $id AND status = 3")->num_rows;
     $prog = $tprog > 0 ? ($cprog / $tprog) * 100 : 0;
     $prog = $prog > 0 ? number_format($prog, 2) : $prog;
-
+$full_name = isset($project['full_name']) ? $project['full_name'] : '';
+$location = isset($project['location']) ? $project['location'] : '';
+$dimension = isset($project['dimension']) ? $project['dimension'] : '';
+$project_cost = isset($project['project_cost']) ? $project['project_cost'] : '';
     // Fetch user productivity
     $prod = $conn->query("SELECT * FROM user_productivity WHERE project_id = $id")->num_rows;
 
@@ -46,10 +49,16 @@
     $inventory_coordinators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = '5' AND id IN ($user_ids)");
     // NEW CODE: Fetch designer details (users with type=4)
 // Fetch roles separately with their specific types
+
     $designers = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 4 AND FIND_IN_SET(id, '$user_ids')");
     $coordinators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 2 AND FIND_IN_SET(id, '$user_ids')");
     // Check if current user is a team member
     // Existing team member check
+// In your project fetch section, make sure you're getting all the new fields
+$coordinator_ids = isset($project['coordinator_ids']) ? $project['coordinator_ids'] : '';
+$designer_ids = isset($project['designer_ids']) ? $project['designer_ids'] : '';
+$estimator_ids = isset($project['estimator_ids']) ? $project['estimator_ids'] : '';
+$inventory_ids = isset($project['inventory_ids']) ? $project['inventory_ids'] : '';
     $is_team_member = false;
     if(!empty($user_ids) && isset($_SESSION['login_id'])) {
         $user_ids_array = explode(',', $user_ids);
@@ -62,6 +71,35 @@
         $manager_ids_array = explode(',', $manager_id);
         $is_manager = in_array($_SESSION['login_id'], $manager_ids_array);
     }
+    if (!empty($coordinator_ids)) {
+    $coordinators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 2 AND FIND_IN_SET(id, '$coordinator_ids')");
+} else {
+    $coordinators = null;
+}
+
+if (!empty($designer_ids)) {
+    $designers = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 4 AND FIND_IN_SET(id, '$designer_ids')");
+} else {
+    $designers = null;
+}
+
+if (!empty($estimator_ids)) {
+    $estimators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 6 AND FIND_IN_SET(id, '$estimator_ids')");
+} else {
+    $estimators = null;
+}
+
+if (!empty($inventory_ids)) {
+    $inventory_coordinators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 5 AND FIND_IN_SET(id, '$inventory_ids')");
+} else {
+    $inventory_coordinators = null;
+}
+// Add coordinator_ids field handling
+if (!empty($coordinator_ids)) {
+    $coordinators = $conn->query("SELECT *, CONCAT(firstname, ' ', lastname) AS name FROM users WHERE type = 2 AND FIND_IN_SET(id, '$coordinator_ids')");
+} else {
+    $coordinators = null;
+}
 
     // This uses both checks
     $show_review_message = ($status == 1) && ($is_team_member || $is_manager);
@@ -373,13 +411,26 @@
         
         <div class="col-md-12">
             <div class="row">
-                <div class="col-sm-6">
-                                <dl>
-                                    <dt><b class="border-bottom border-primary">Project Name</b></dt>
-                                    <dd>
-                                        <?php echo ucwords($name) ?>
-                                        
-                                    </dd>
+              <div class="col-sm-6">
+    <dl>
+        <dt><b class="border-bottom border-primary">Project Name</b></dt>
+        <dd><?php echo ucwords($name) ?></dd>
+        
+        <!-- Add new Customer Name field -->
+        <dt><b class="border-bottom border-primary">Customer Name</b></dt>
+        <dd><?php echo !empty($full_name) ? ucwords($full_name) : '<small><i>Not specified</i></small>' ?></dd>
+        
+        <!-- Add new Location field -->
+        <dt><b class="border-bottom border-primary">Location</b></dt>
+        <dd><?php echo !empty($location) ? ucwords($location) : '<small><i>Not specified</i></small>' ?></dd>
+        
+        <!-- Add new Dimension field -->
+        <dt><b class="border-bottom border-primary">Dimension</b></dt>
+        <dd><?php echo !empty($dimension) ? $dimension : '<small><i>Not specified</i></small>' ?></dd>
+        
+        <!-- Add new Project Cost field -->
+        <dt><b class="border-bottom border-primary">Project Cost</b></dt>
+        <dd><?php echo !empty($project_cost) ? '₱' . number_format($project_cost, 2) : '<small><i>Not specified</i></small>' ?></dd>
                                 <!-- Enhanced Files section with image preview -->
 <dt><b class="border-bottom border-primary">Files</b></dt>
 <dd>
@@ -598,44 +649,48 @@
                                             <small><i>No Estimators Assigned</i></small>
                                         <?php endif; ?>
                                     </dd>
-                                </dl><dl>
-                                    <dt><b class="border-bottom border-primary">Project Coordinator</b></dt>
-                                    <dd>
-                                        <?php 
-                                        if($coordinators && $coordinators->num_rows > 0):
-                                            while($row = $coordinators->fetch_assoc()):
-                                        ?>
-                                        <div class="d-flex align-items-center mt-1">
-                                            <img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $row['avatar'] ?>" alt="Avatar">
-                                            <b><?php echo ucwords($row['name']) ?></b>
-                                        </div>
-                                        <?php 
-                                            endwhile;
-                                        else: 
-                                        ?>
-                                            <small><i>No Project Coordinator Assigned</i></small>
-                                        <?php endif; ?>
-                                    </dd>
                                 </dl>
-                                <dl>
-                                    <dt><b class="border-bottom border-primary">Inventory Coordinator</b></dt>
-                                    <dd>
-                                        <?php 
-                                        if($inventory_coordinators && $inventory_coordinators->num_rows > 0):
-                                            while($row = $inventory_coordinators->fetch_assoc()):
-                                        ?>
-                                        <div class="d-flex align-items-center mt-1">
-                                            <img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $row['avatar'] ?>" alt="Avatar">
-                                            <b><?php echo ucwords($row['name']) ?></b>
-                                        </div>
-                                        <?php 
-                                            endwhile;
-                                        else: 
-                                        ?>
-                                            <small><i>No Inventory Coordinators Assigned</i></small>
-                                        <?php endif; ?>
-                                    </dd>
-                                </dl>
+                            <dl>
+    <dt><b class="border-bottom border-primary">Project Coordinator</b></dt>
+    <dd>
+        <?php 
+        if($coordinators && $coordinators->num_rows > 0):
+            while($row = $coordinators->fetch_assoc()):
+        ?>
+        <div class="d-flex align-items-center mt-1">
+            <img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $row['avatar'] ?>" alt="Avatar">
+            <b><?php echo ucwords($row['name']) ?></b>
+        </div>
+        <?php 
+            endwhile;
+        else: 
+        ?>
+            <small><i>No Project Coordinator Assigned</i></small>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+
+
+<dl>
+    <dt><b class="border-bottom border-primary">Inventory Coordinator</b></dt>
+    <dd>
+        <?php 
+        if($inventory_coordinators && $inventory_coordinators->num_rows > 0):
+            while($row = $inventory_coordinators->fetch_assoc()):
+        ?>
+        <div class="d-flex align-items-center mt-1">
+            <img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $row['avatar'] ?>" alt="Avatar">
+            <b><?php echo ucwords($row['name']) ?></b>
+        </div>
+        <?php 
+            endwhile;
+        else: 
+        ?>
+            <small><i>No Inventory Coordinators Assigned</i></small>
+        <?php endif; ?>
+    </dd>
+</dl>
                                 <dl>
 
     </dl>
@@ -664,35 +719,35 @@
                     </div>
                     <div class="card-body">
                         <ul class="users-list clearfix">
-                        <?php 
-                        if(!empty($user_ids)):
-                        // Modified query to exclude designers, project coordinators, estimators, and inventory coordinators
-                            $members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users 
-                            WHERE id IN ($user_ids) AND type != 4 AND type != 5
-                            ORDER BY concat(firstname,' ',lastname) ASC");
-                            
-                            // Check if there are any team members after excluding designers and coordinators
-                            if($members && $members->num_rows > 0): 
-                                while($row=$members->fetch_assoc()):
-                        ?>
-                        <li>
-                            <img src="assets/uploads/<?php echo $row['avatar'] ?>" alt="User Image">
-                            <a class="users-list-name" href="javascript:void(0)"><?php echo ucwords($row['name']) ?></a>
-                            <!-- <span class="users-list-date">Today</span> -->
-                        </li>
-                        <?php 
-                                endwhile;
-                            else:
-                        ?>
-                            <small><i>No Team Members Assigned</i></small>
-                        <?php
-                            endif;
-                        else:
-                        ?>
-                            <small><i>No Team Members Assigned</i></small>
-                        <?php
-                        endif;
-                        ?>
+                    <!-- Update the team members query to only show actual team members -->
+<?php 
+if(!empty($user_ids)):
+    // Only show users with type = 3 (team members)
+    $members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users 
+    WHERE id IN ($user_ids) AND type = 3
+    ORDER BY concat(firstname,' ',lastname) ASC");
+    
+    // Check if there are any team members
+    if($members && $members->num_rows > 0): 
+        while($row=$members->fetch_assoc()):
+?>
+<li>
+    <img src="assets/uploads/<?php echo $row['avatar'] ?>" alt="User Image">
+    <a class="users-list-name" href="javascript:void(0)"><?php echo ucwords($row['name']) ?></a>
+</li>
+<?php 
+        endwhile;
+    else:
+?>
+    <small><i>No Team Members Assigned</i></small>
+<?php
+    endif;
+else:
+?>
+    <small><i>No Team Members Assigned</i></small>
+<?php
+endif;
+?>
                         </ul>
                     </div>
                 </div>

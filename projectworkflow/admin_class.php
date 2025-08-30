@@ -367,144 +367,171 @@ function logout(){
 		return 0;
 	}
 	// admin_class.php
-	function save_project() {
-		extract($_POST);
-		$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-	
-		// Check if the required columns exist in the database
-		$table_info = $this->db->query("DESCRIBE project_list");
-		$columns = [];
-		while($row = $table_info->fetch_assoc()) {
-			$columns[] = $row['Field'];
-		}
-	
-		$data = array();
-		foreach ($_POST as $k => $v) {
-			// Skip arrays and specific keys that need special handling
-			if (!in_array($k, ['id', 'user_ids', 'manager_id', 'estimator_ids', 'designer_ids', 'inventory_ids', 'status']) && !is_numeric($k) && !is_array($v)) {
-				if ($k == 'description') {
-					$v = htmlentities(str_replace("'", "&#x2019;", $v));
-				}
-				$v = $this->db->real_escape_string($v);
-				$data[$k] = $v;
-			}
-		}
-	
-		// Set status: 1 for new projects, use submitted value for existing
-		if ($id == 0) {
-			$data['status'] = '1';
-		} else {
-			if (isset($_POST['status'])) {
-				$data['status'] = $this->db->real_escape_string($_POST['status']);
-			}
-		}
-	
-		// Convert data array to string
-		$data_str = '';
-		foreach ($data as $k => $v) {
-			$data_str .= ", $k='$v'";
-		}
-		$data_str = ltrim($data_str, ', ');
-	
-		// Handle user_ids
-		if (isset($_POST['user_ids']) && in_array('user_ids', $columns)) {
-			if (is_array($_POST['user_ids'])) {
-				// If user_ids is an array (multiple users selected)
-				$user_ids = array_map(function($item) {
-					return $this->db->real_escape_string($item);
-				}, $_POST['user_ids']);
-				$data_str .= ", user_ids='" . implode(',', $user_ids) . "'";
-			} else {
-				// If user_ids is a string (single user selected)
-				$user_ids = $this->db->real_escape_string($_POST['user_ids']);
-				$data_str .= ", user_ids='$user_ids'";
-			}
-		}
-	
-		// Handle manager_id
-		if (isset($_POST['manager_id']) && in_array('manager_id', $columns)) {
-			if (is_array($_POST['manager_id'])) {
-				// If manager_id is an array (multiple managers selected)
-				$manager_ids = array_map(function($item) {
-					return $this->db->real_escape_string($item);
-				}, $_POST['manager_id']);
-				$data_str .= ", manager_id='" . implode(',', $manager_ids) . "'";
-			} else {
-				// If manager_id is a string (single manager selected)
-				$manager_id = $this->db->real_escape_string($_POST['manager_id']);
-				$data_str .= ", manager_id='$manager_id'";
-			}
-		}
-		
-		// Only add these fields if they exist in the database
-		// Handle estimator_ids - only if column exists
-		if (isset($_POST['estimator_ids']) && in_array('estimator_ids', $columns)) {
-			if (is_array($_POST['estimator_ids'])) {
-				$estimator_ids = array_map(function($item) {
-					return $this->db->real_escape_string($item);
-				}, $_POST['estimator_ids']);
-				$data_str .= ", estimator_ids='" . implode(',', $estimator_ids) . "'";
-			} else {
-				$estimator_ids = $this->db->real_escape_string($_POST['estimator_ids']);
-				$data_str .= ", estimator_ids='$estimator_ids'";
-			}
-		}
-		
-		// Handle designer_ids - only if column exists
-		if (isset($_POST['designer_ids']) && in_array('designer_ids', $columns)) {
-			if (is_array($_POST['designer_ids'])) {
-				$designer_ids = array_map(function($item) {
-					return $this->db->real_escape_string($item);
-				}, $_POST['designer_ids']);
-				$data_str .= ", designer_ids='" . implode(',', $designer_ids) . "'";
-			} else {
-				$designer_ids = $this->db->real_escape_string($_POST['designer_ids']);
-				$data_str .= ", designer_ids='$designer_ids'";
-			}
-		}
-		
-		// Handle inventory_ids - only if column exists
-		if (isset($_POST['inventory_ids']) && in_array('inventory_ids', $columns)) {
-			if (is_array($_POST['inventory_ids'])) {
-				$inventory_ids = array_map(function($item) {
-					return $this->db->real_escape_string($item);
-				}, $_POST['inventory_ids']);
-				$data_str .= ", inventory_ids='" . implode(',', $inventory_ids) . "'";
-			} else {
-				$inventory_ids = $this->db->real_escape_string($_POST['inventory_ids']);
-				$data_str .= ", inventory_ids='$inventory_ids'";
-			}
-		}
-	
-		$data_str .= ", notified=0";
-	
-		// Build and execute query
-		if ($id > 0) {
-			$check = $this->db->query("SELECT id FROM project_list WHERE id = $id");
-			if ($check->num_rows > 0) {
-				$save = $this->db->query("UPDATE project_list SET $data_str WHERE id = $id");
-				if (!$save) {
-					error_log("Update Error: " . $this->db->error);
-					return 0;
-				}
-			} else {
-				return 0;
-			}
-		} else {
-			$save = $this->db->query("INSERT INTO project_list SET $data_str");
-			if (!$save) {
-				error_log("Insert Error: " . $this->db->error);
-				return 0;
-			}
-		}
-	
-		if ($id == 0) { // New project
-			$new_project_id = $this->db->insert_id;
-			$user_id = $_SESSION['login_id'];
-			$this->db->query("UPDATE uploaded_files SET project_id = $new_project_id WHERE project_id = 0 AND uploaded_by = $user_id");
-		}
-		return 1;
-	}
+function save_project() {
+    extract($_POST);
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+
+    // Check if the required columns exist in the database
+    $table_info = $this->db->query("DESCRIBE project_list");
+    $columns = [];
+    while($row = $table_info->fetch_assoc()) {
+        $columns[] = $row['Field'];
+    }
+
+    $data = array();
+    
+    // Handle regular fields including the new ones
+    $regular_fields = ['name', 'description', 'start_date', 'end_date', 'full_name', 'location', 'dimension', 'project_cost'];
+    
+    foreach ($_POST as $k => $v) {
+        // Skip arrays and specific keys that need special handling
+        if (!in_array($k, ['id', 'user_ids', 'manager_id', 'estimator_ids', 'designer_ids', 'inventory_ids', 'coordinator_ids', 'status']) 
+            && !is_numeric($k) && !is_array($v) && in_array($k, $columns)) {
+            
+            if ($k == 'description') {
+                $v = htmlentities(str_replace("'", "&#x2019;", $v));
+            }
+            
+            // Handle numeric fields properly
+            if ($k == 'project_cost') {
+                $v = !empty($v) ? floatval($v) : 0;
+                $data[$k] = $v;
+            } else {
+                $v = $this->db->real_escape_string($v);
+                $data[$k] = $v;
+            }
+        }
+    }
+
+    // Set status: 1 for new projects, use submitted value for existing
+    if ($id == 0) {
+        $data['status'] = '1';
+    } else {
+        if (isset($_POST['status'])) {
+            $data['status'] = $this->db->real_escape_string($_POST['status']);
+        }
+    }
+
+    // Convert data array to string for regular fields
+    $data_str = '';
+    foreach ($data as $k => $v) {
+        if ($k == 'project_cost') {
+            $data_str .= ", $k=$v";
+        } else {
+            $data_str .= ", $k='$v'";
+        }
+    }
+    $data_str = ltrim($data_str, ', ');
+
+    // Handle user_ids (Team Members)
+    if (isset($_POST['user_ids']) && in_array('user_ids', $columns)) {
+        if (is_array($_POST['user_ids'])) {
+            $user_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['user_ids']);
+            $data_str .= ", user_ids='" . implode(',', $user_ids) . "'";
+        } else {
+            $user_ids = $this->db->real_escape_string($_POST['user_ids']);
+            $data_str .= ", user_ids='$user_ids'";
+        }
+    }
+
+    // Handle manager_id
+    if (isset($_POST['manager_id']) && in_array('manager_id', $columns)) {
+        if (is_array($_POST['manager_id'])) {
+            $manager_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['manager_id']);
+            $data_str .= ", manager_id='" . implode(',', $manager_ids) . "'";
+        } else {
+            $manager_id = $this->db->real_escape_string($_POST['manager_id']);
+            $data_str .= ", manager_id='$manager_id'";
+        }
+    }
+    
+    // Handle coordinator_ids - only if column exists
+    if (isset($_POST['coordinator_ids']) && in_array('coordinator_ids', $columns)) {
+        if (is_array($_POST['coordinator_ids'])) {
+            $coordinator_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['coordinator_ids']);
+            $data_str .= ", coordinator_ids='" . implode(',', $coordinator_ids) . "'";
+        } else {
+            $coordinator_ids = $this->db->real_escape_string($_POST['coordinator_ids']);
+            $data_str .= ", coordinator_ids='$coordinator_ids'";
+        }
+    }
+    
+    // Handle estimator_ids - only if column exists
+    if (isset($_POST['estimator_ids']) && in_array('estimator_ids', $columns)) {
+        if (is_array($_POST['estimator_ids'])) {
+            $estimator_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['estimator_ids']);
+            $data_str .= ", estimator_ids='" . implode(',', $estimator_ids) . "'";
+        } else {
+            $estimator_ids = $this->db->real_escape_string($_POST['estimator_ids']);
+            $data_str .= ", estimator_ids='$estimator_ids'";
+        }
+    }
+    
+    // Handle designer_ids - only if column exists
+    if (isset($_POST['designer_ids']) && in_array('designer_ids', $columns)) {
+        if (is_array($_POST['designer_ids'])) {
+            $designer_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['designer_ids']);
+            $data_str .= ", designer_ids='" . implode(',', $designer_ids) . "'";
+        } else {
+            $designer_ids = $this->db->real_escape_string($_POST['designer_ids']);
+            $data_str .= ", designer_ids='$designer_ids'";
+        }
+    }
+    
+    // Handle inventory_ids - only if column exists
+    if (isset($_POST['inventory_ids']) && in_array('inventory_ids', $columns)) {
+        if (is_array($_POST['inventory_ids'])) {
+            $inventory_ids = array_map(function($item) {
+                return $this->db->real_escape_string($item);
+            }, $_POST['inventory_ids']);
+            $data_str .= ", inventory_ids='" . implode(',', $inventory_ids) . "'";
+        } else {
+            $inventory_ids = $this->db->real_escape_string($_POST['inventory_ids']);
+            $data_str .= ", inventory_ids='$inventory_ids'";
+        }
+    }
+
+    $data_str .= ", notified=0";
+
+    // Build and execute query
+    if ($id > 0) {
+        $check = $this->db->query("SELECT id FROM project_list WHERE id = $id");
+        if ($check->num_rows > 0) {
+            $save = $this->db->query("UPDATE project_list SET $data_str WHERE id = $id");
+            if (!$save) {
+                error_log("Update Error: " . $this->db->error);
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    } else {
+        $save = $this->db->query("INSERT INTO project_list SET $data_str");
+        if (!$save) {
+            error_log("Insert Error: " . $this->db->error);
+            return 0;
+        }
+    }
+
+    if ($id == 0) { // New project
+        $new_project_id = $this->db->insert_id;
+        $user_id = $_SESSION['login_id'];
+        $this->db->query("UPDATE uploaded_files SET project_id = $new_project_id WHERE project_id = 0 AND uploaded_by = $user_id");
+    }
+    
+    return 1;
+}
+
 function delete_project(){
     extract($_POST);
     
@@ -522,7 +549,6 @@ function delete_project(){
     }
     return 0;
 }
-
 
 	function save_task(){
 		extract($_POST);

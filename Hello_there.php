@@ -12,7 +12,7 @@ if (!isset($_SESSION['login_id'])) {
 
 // NEW CODE: Redirect Project Managers directly to the project workflow
 if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 14 || $_SESSION['login_type'] == 13   || $_SESSION['login_type'] == 8 || $_SESSION['login_type'] == 6  || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 4 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 2) {
-    header("Location: ./index.php");
+    header("Location: ./projectworkflow/index.php");
     exit();
 }
 ?>
