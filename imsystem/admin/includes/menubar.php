@@ -17,10 +17,10 @@
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
       <li><a href="product_unit.php"><i class="fas fa-balance-scale nav-icon"></i> <span>&nbsp;Add New Unit</span></a></li>
       <li><a href="product_category.php"><i class="fas fa-list nav-icon"></i> <span>&nbsp;Inventory Category</span></a></li>
-      <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Add New Product</span></a></li>
+      <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Purchases </span></a></li>
       <li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Add New Supplier</span></a></li>
       <li><a href="purchase_master.php"><i class="fas fa-cart-shopping nav-icon"></i> <span>Purchase Product</span></a></li>
-      <li><a href="sales_master.php">&nbsp;<i class="fas fa-peso-sign nav-icon"></i> <span>&nbsp;Product Sales</span></a></li>
+      <li><a href="sales_master.php">&nbsp;<i class="fas fa-peso-sign nav-icon"></i> <span>&nbsp;Withdrawal </span></a></li>
       <li><a href="view_stock.php"><i class="fa-brands fa-stack-overflow nav-icon"></i> <span>&nbsp;Product Stock</span></a></li>
       <li><a href="shapeVisual.php"><i class="fas fa-chart-pie nav-icon"></i> <span>&nbsp;Shape Visualization</span></a></li>
       <li class="treeview" id="reports-treeview">
