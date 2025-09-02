@@ -73,7 +73,7 @@ if (isset($_POST['generate'])) {
             
             $output = fopen('php://output', 'w');
             fputcsv($output, [
-                'Inventory Type', 'Category', 'Product', 'Quantity',
+                'Inventory Type', 'Category', 'Product', 'Specification', 'Quantity',
                 'Unit', 'Price', 'Vendor', 'Purchase Date'
             ]);
             
@@ -82,6 +82,7 @@ if (isset($_POST['generate'])) {
                     $row['inventory_selection'],
                     $row['company_name'],
                     $row['product_name'],
+                    $row['specification'] ?? 'N/A',
                     $row['quantity'],
                     $row['unit'],
                     number_format($row['price'], 2),
@@ -106,6 +107,7 @@ if (isset($_POST['generate'])) {
                     <th>Inventory Type</th>
                     <th>Category</th>
                     <th>Product</th>
+                    <th>Specification</th>
                     <th>Quantity</th>
                     <th>Unit</th>
                     <th>Price</th>
@@ -118,6 +120,7 @@ if (isset($_POST['generate'])) {
                 echo '<td>'.$row['inventory_selection'].'</td>';
                 echo '<td>'.$row['company_name'].'</td>';
                 echo '<td>'.$row['product_name'].'</td>';
+                echo '<td>'.($row['specification'] ?? 'N/A').'</td>';
                 echo '<td>'.$row['quantity'].'</td>';
                 echo '<td>'.$row['unit'].'</td>';
                 echo '<td>'.number_format($row['price'], 2).'</td>';
@@ -227,6 +230,7 @@ if (isset($_POST['generate'])) {
                           <th>Inventory Type</th>
                           <th>Category</th>
                           <th>Product</th>
+                          <th>Specification</th>
                           <th>Quantity</th>
                           <th>Unit</th>
                           <th>Price</th>
@@ -240,6 +244,7 @@ if (isset($_POST['generate'])) {
                             <td><?= htmlspecialchars($row['inventory_selection']) ?></td>
                             <td><?= htmlspecialchars($row['company_name']) ?></td>
                             <td><?= htmlspecialchars($row['product_name']) ?></td>
+                            <td><?= htmlspecialchars($row['specification'] ?? 'N/A') ?></td>
                             <td><?= $row['quantity'] ?></td>
                             <td><?= htmlspecialchars($row['unit']) ?></td>
                             <td><?= number_format($row['price'], 2) ?></td>

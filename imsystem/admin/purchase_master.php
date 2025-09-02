@@ -91,6 +91,12 @@
                   </select>
                 </div>
                 <div class="form-group">
+                  <label for="specification">Select Specification:</label>
+                  <select class="form-control" name="specification" id="specification" required>
+                    <option value="">- Select Specification -</option>
+                  </select>
+                </div>
+                <div class="form-group">
                   <label for="quantity">Enter Quantity:</label>
                   <input type="number" class="form-control" name="quantity" id="quantity" value="0" min="0" required>
                 </div>
@@ -149,6 +155,7 @@
                             <th>Inventory Type <i class="fa fa-sort"></i></th>
                             <th>Category <i class="fa fa-sort"></i></th>
                             <th>Product <i class="fa fa-sort"></i></th>
+                            <th>Specification <i class="fa fa-sort"></i></th>
                             <th>Quantity <i class="fa fa-sort"></i></th>
                             <th>Unit <i class="fa fa-sort"></i></th>
                             <th>Price <i class="fa fa-sort"></i></th>
@@ -167,6 +174,7 @@
                             <td><?php echo $row['inventory_selection']; ?></td>
                             <td><?php echo $row['company_name']; ?></td>
                             <td><?php echo $row['product_name']; ?></td>
+                            <td><?php echo $row['specification'] ?? 'N/A'; ?></td>
                             <td><?php echo $row['quantity'];?></td>
                             <td><?php echo $row['unit']; ?></td>
                             <td><?php echo number_format($row['price'], 2); ?></td>
@@ -295,6 +303,7 @@
                   <th>Date</th>
                   <th>Inventory</th>
                   <th>Category</th>
+                  <th>Specification</th>
                   <th>Quantity</th>
                   <th>Unit</th>
                   <th>Price</th>
@@ -335,12 +344,16 @@ $(function(){
         success: function(response){
           $('#company_name').html(response);
           $('#product_name').html('<option value="">- Select Product -</option>');
+          $('#unit').html('<option value="">- Select Unit -</option>');
+          $('#specification').html('<option value="">- Select Specification -</option>');
         }
       });
     }
     else{
       $('#company_name').html('<option value="">- Select Category -</option>');
       $('#product_name').html('<option value="">- Select Product -</option>');
+      $('#unit').html('<option value="">- Select Unit -</option>');
+      $('#specification').html('<option value="">- Select Specification -</option>');
     }
   });
 
@@ -355,12 +368,14 @@ $(function(){
         success: function(response){
           $('#product_name').html(response);
           $('#unit').html('<option value="">- Select Unit -</option>');
+          $('#specification').html('<option value="">- Select Specification -</option>');
         }
       });
     }
     else{
       $('#product_name').html('<option value="">- Select Product -</option>');
       $('#unit').html('<option value="">- Select Unit -</option>');
+      $('#specification').html('<option value="">- Select Specification -</option>');
     }
   });
 
@@ -378,11 +393,38 @@ $(function(){
         dataType: 'json',
         success: function(response){
           $('#unit').html(response);
+          $('#specification').html('<option value="">- Select Specification -</option>');
         }
       });
     }
     else{
       $('#unit').html('<option value="">- Select Unit -</option>');
+      $('#specification').html('<option value="">- Select Specification -</option>');
+    }
+  });
+
+  $('#unit').change(function(){
+    var unit = $(this).val();
+    var product_name = $('#product_name').val();
+    var company_name = $('#company_name').val();
+    
+    if(unit != '' && product_name != '' && company_name != ''){
+      $.ajax({
+        type: 'POST',
+        url: 'purchase_specification.php',
+        data: {
+          unit: unit,
+          product_name: product_name,
+          company_name: company_name
+        },
+        dataType: 'json',
+        success: function(response){
+          $('#specification').html(response);
+        }
+      });
+    }
+    else{
+      $('#specification').html('<option value="">- Select Specification -</option>');
     }
   });
 
@@ -417,7 +459,8 @@ $(function(){
                 $('#history_product_name').text(response.product_name);
                 $('#history_product_details').html(
                     '<strong>Category:</strong> ' + response.company_name + 
-                    ' | <strong>Unit:</strong> ' + response.unit
+                    ' | <strong>Unit:</strong> ' + response.unit +
+                    ' | <strong>Specification:</strong> ' + (response.specification || 'N/A')
                 );
                 
                 var historyHtml = '';
@@ -427,6 +470,7 @@ $(function(){
                             <td>${purchase.action_time}</td>
                             <td>${purchase.inventory_selection}</td>
                             <td>${purchase.company_name}</td>
+                            <td>${purchase.specification || 'N/A'}</td>
                             <td>${purchase.quantity}</td>
                             <td>${purchase.unit}</td>
                             <td>${parseFloat(purchase.price).toFixed(2)}</td>
