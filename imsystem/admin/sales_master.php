@@ -1,6 +1,10 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
-<head><link rel="icon" type="image/x-icon" href="rga.png"></head>
+<head>
+    <link rel="icon" type="image/x-icon" href="rga.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+</head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -10,7 +14,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <section class="content-header">
-      <h1>Sales Management System</h1>
+      <h1>Withdrawal</h1>
       <ol class="breadcrumb">
         <li><a href="home.php"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Sales</li>
@@ -54,16 +58,17 @@
               <form id="salesForm">
                 <div class="form-group">
                   <label for="project_name">Project Name:</label>
-                  <select class="form-control" name="project_name" id="project_name" required>
+                  <select class="form-control select2" name="project_name" id="project_name" required style="width: 100%;">
                     <option value="">- Select Project -</option>
                     <?php
-                      $sql = "SELECT id, name, full_name, location, description FROM project_list WHERE status IN (1,2,3,5) ORDER BY name ASC";
+                      // Modified query to exclude "Done" projects (status = 5)
+                      $sql = "SELECT id, name, full_name, location, description FROM project_list WHERE status IN (1,2,3) ORDER BY name ASC";
                       $query = $conn->query($sql);
                       while($row = $query->fetch_assoc()){
                         echo "<option value='".$row['id']."' 
-                              data-customer='".$row['full_name']."' 
-                              data-location='".$row['location']."' 
-                              data-description='".$row['description']."'>".$row['name']."</option>";
+                              data-customer='".htmlspecialchars($row['full_name'], ENT_QUOTES)."' 
+                              data-location='".htmlspecialchars($row['location'], ENT_QUOTES)."' 
+                              data-description='".htmlspecialchars($row['description'], ENT_QUOTES)."'>".$row['name']."</option>";
                       }
                     ?>
                   </select>
@@ -126,7 +131,7 @@
         <div class="col-md-8">
           <div class="box floating-box">
             <div class="box-header with-border">
-              <h3 class="box-title">Select Products</h3>
+              <h3 class="box-title">Select Materials</h3>
             </div>
             <div class="box-body">
               <div class="row">
@@ -162,9 +167,9 @@
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="product_name">Select Product:</label>
+                    <label for="product_name">Select Material:</label>
                     <select class="form-control" name="product_name" id="product_name" required>
-                      <option value="">- Select Product -</option>
+                      <option value="">- Select Material -</option>
                     </select>
                   </div>
                 </div>
@@ -225,7 +230,7 @@
         <div class="col-md-12">
           <div class="box floating-box">
             <div class="box-header with-border">
-              <h3 class="box-title">Taken Products</h3>
+              <h3 class="box-title">Taken Materials</h3>
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-danger btn-sm" id="clearCart">
                   <i class="fa fa-trash"></i> Clear Cart
@@ -239,7 +244,7 @@
                     <tr>
                       <th>For</th>
                       <th>Category</th>
-                      <th>Product</th>
+                      <th>Material</th>
                       <th>Unit</th>
                       <th>Price</th>
                       <th>Quantity</th>
@@ -262,7 +267,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <button type="button" class="btn btn-success btn-lg btn-block" id="generateBill">
-                    <i class="fa fa-file-text"></i> Generate Bill
+                    <i class="fa fa-file-text"></i> Create Material Requisition Form
                   </button>
                 </div>
               </div>
