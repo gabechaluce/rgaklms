@@ -135,7 +135,7 @@
             </div>
             <div class="box-body">
               <div class="row">
-              <div class="col-md-4">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="inventory_selection">Choose Inventory:</label>
                     <select class="form-control" name="inventory_selection" id="inventory_selection" required>
@@ -181,9 +181,16 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="specification">Specification:</label>
+                    <select class="form-control" name="specification" id="specification" required>
+                      <option value="">- Select Specification -</option>
+                    </select>
+                  </div>
+                </div>
               </div>
               <div class="row">
-                
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="price">Price:</label>
@@ -246,6 +253,7 @@
                       <th>Category</th>
                       <th>Material</th>
                       <th>Unit</th>
+                      <th>Specification</th>
                       <th>Price</th>
                       <th>Quantity</th>
                       <th>Total</th>
@@ -257,7 +265,7 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="6" align="right"><strong>Grand Total:</strong></td>
+                      <td colspan="7" align="right"><strong>Grand Total:</strong></td>
                       <td><span id="grandTotal">0.00</span></td>
                       <td></td>
                     </tr>
@@ -310,7 +318,7 @@
     }
     loadCart();
 
-    // Project selection change event - NEW FEATURE
+    // Project selection change event
     $('#project_name').change(function(){
       var projectId = $(this).val();
       var selectedOption = $(this).find('option:selected');
@@ -319,12 +327,11 @@
         // Auto-fill customer name and location from data attributes
         $('#customer_name').val(selectedOption.data('customer'));
         $('#location').val(selectedOption.data('location'));
-       
         
         // Fetch designer information from the project
         $.ajax({
           type: 'POST',
-          url: 'get_project_details.php', // You'll need to create this file
+          url: 'get_project_details.php',
           data: {project_id: projectId},
           dataType: 'json',
           success: function(response){
@@ -345,289 +352,418 @@
         $('#customer_name').val('');
         $('#location').val('');
         $('#designer').val('');
-    
         $('#dimension').val('');
       }
     });
 
-    //Change Category
-    $('#inventory_selection').change(function(){
-      var inventory_selection = $(this).val();
-      if(inventory_selection != ''){
-        $.ajax({
-          type: 'POST',
-          url: 'sales_category.php',
-          data: {inventory_selection: inventory_selection},
-          dataType: 'json',
-          success: function(response){
-            $('#company_name').html(response);
-            $('#product_name').html('<option value="">- Select Product -</option>');
-            $('#unit').html('<option value="">- Select Unit -</option>');
-            $('#stock_status').html('');
-            calculateTotal();
-          }
-        });
-      }
-      else{
-        $('#company_name').html('<option value="">- Select Category -</option>');
+    // Change Inventory Selection
+$('#inventory_selection').change(function(){
+  var inventory_selection = $(this).val();
+  if(inventory_selection != ''){
+    $.ajax({
+      type: 'POST',
+      url: 'sales_category.php',
+      data: {inventory_selection: inventory_selection},
+      dataType: 'json',
+      success: function(response){
+        $('#company_name').html(response);
         $('#product_name').html('<option value="">- Select Product -</option>');
         $('#unit').html('<option value="">- Select Unit -</option>');
+        $('#specification').html('<option value="">- Select Specification -</option>');
+        $('#price').val(0); // Reset price
         $('#stock_status').html('');
         calculateTotal();
       }
     });
-
-    // Category change event
-    $('#company_name').change(function(){
-      var company_name = $(this).val();
-      if(company_name != ''){
-        $.ajax({
-          type: 'POST',
-          url: 'sales_product.php',
-          data: {company_name: company_name},
-          dataType: 'json',
-          success: function(response){
-            $('#product_name').html(response);
-            $('#unit').html('<option value="">- Select Unit -</option>');
-            $('#price').val(0);
-            $('#stock_status').html('');
-            calculateTotal();
-          }
-        });
-      }
-      else{
-        $('#product_name').html('<option value="">- Select Product -</option>');
+  }
+  else{
+    $('#company_name').html('<option value="">- Select Category -</option>');
+    $('#product_name').html('<option value="">- Select Product -</option>');
+    $('#unit').html('<option value="">- Select Unit -</option>');
+    $('#specification').html('<option value="">- Select Specification -</option>');
+    $('#price').val(0);
+    $('#stock_status').html('');
+    calculateTotal();
+  }
+});
+  // Category change event
+$('#company_name').change(function(){
+  var company_name = $(this).val();
+  if(company_name != ''){
+    $.ajax({
+      type: 'POST',
+      url: 'sales_product.php',
+      data: {company_name: company_name},
+      dataType: 'json',
+      success: function(response){
+        $('#product_name').html(response);
         $('#unit').html('<option value="">- Select Unit -</option>');
-        $('#price').val(0);
+        $('#specification').html('<option value="">- Select Specification -</option>');
+        $('#price').val(0); // Reset price
         $('#stock_status').html('');
         calculateTotal();
       }
     });
+  }
+  else{
+    $('#product_name').html('<option value="">- Select Product -</option>');
+    $('#unit').html('<option value="">- Select Unit -</option>');
+    $('#specification').html('<option value="">- Select Specification -</option>');
+    $('#price').val(0);
+    $('#stock_status').html('');
+    calculateTotal();
+  }
+});
 
-    // Product change event
-    $('#product_name').change(function(){
-      var product_name = $(this).val();
-      var company_name = $('#company_name').val();
-      if(product_name != ''){
-        $.ajax({
-          type: 'POST',
-          url: 'sales_unit.php',
-          data: {
-            product_name: product_name,
-            company_name: company_name
-          },
-          dataType: 'json',
-          success: function(response){
-            $('#unit').html(response);
-            $('#price').val(0);
-            $('#stock_status').html('');
-            calculateTotal();
-          }
-        });
-      }
-      else{
-        $('#unit').html('<option value="">- Select Unit -</option>');
-        $('#price').val(0);
+   // Product change event
+$('#product_name').change(function(){
+  var product_name = $(this).val();
+  var company_name = $('#company_name').val();
+  if(product_name != ''){
+    $.ajax({
+      type: 'POST',
+      url: 'sales_unit.php',
+      data: {
+        product_name: product_name,
+        company_name: company_name
+      },
+      dataType: 'json',
+      success: function(response){
+        $('#unit').html(response);
+        $('#price').val(0); // Reset price
         $('#stock_status').html('');
         calculateTotal();
+        
+        // Load specifications for this product
+        loadSpecifications(product_name, company_name);
       }
     });
+  }
+  else{
+    $('#unit').html('<option value="">- Select Unit -</option>');
+    $('#specification').html('<option value="">- Select Specification -</option>');
+    $('#price').val(0);
+    $('#stock_status').html('');
+    calculateTotal();
+  }
+});
 
-    // Unit change event
-    $('#unit').change(function(){
-      var unit = $(this).val();
-      var product_name = $('#product_name').val();
-      var company_name = $('#company_name').val();
-      if(unit != ''){
-        $.ajax({
-          type: 'POST',
-          url: 'sales_price.php',
-          data: {
-            unit: unit,
-            product_name: product_name,
-            company_name: company_name
-          },
-          dataType: 'json',
-          success: function(response){
-            $('#price').val(response);
-            calculateTotal();
-            
-            // Check stock availability
-            checkStockStatus();
-          }
-        });
-      }
-      else{
-        $('#price').val(0);
-        $('#stock_status').html('');
-        calculateTotal();
+// Function to load specifications
+function loadSpecifications(product_name, company_name) {
+  if(product_name && company_name) {
+    // Show loading in specification dropdown
+    $('#specification').html('<option value="">Loading specifications...</option>');
+    
+    $.ajax({
+      type: 'POST',
+      url: 'get_specifications.php',
+      data: {
+        product_name: product_name,
+        company_name: company_name
+      },
+      dataType: 'json',
+      success: function(response){
+        $('#specification').html(response);
+        
+        // If there's only one specification (excluding default), select it automatically
+        if($('#specification option').length === 2) {
+          $('#specification').val($('#specification option:last').val()).trigger('change');
+        } else {
+          // Trigger change to check stock with the selected specification
+          $('#specification').trigger('change');
+        }
+      },
+      error: function(){
+        $('#specification').html('<option value="">- Select Specification -</option>');
+        // Check stock even if no specifications are available
+        checkStockStatus();
       }
     });
-
+  }
+}
+// Unit change event - DON'T display price when unit is selected
+$('#unit').change(function(){
+  var unit = $(this).val();
+  var product_name = $('#product_name').val();
+  var company_name = $('#company_name').val();
+  
+  if(unit != ''){
+    // Reset price to 0 when unit changes
+    $('#price').val(0);
+    calculateTotal();
+    
+    // Clear stock status
+    $('#stock_status').html('');
+    
+    // Only check stock if specification is already selected
+    var specification = $('#specification').val();
+    if(specification && specification !== '' && specification !== '0' && specification !== '- Select Specification -') {
+      checkStockStatus();
+      
+      // Update price based on specification (not unit)
+      updatePriceBySpecification();
+    }
+  }
+  else{
+    $('#price').val(0);
+    $('#stock_status').html('');
+    calculateTotal();
+  }
+});
+// Update the specification change event
+$('#specification').change(function(){
+  var spec_id = $(this).val();
+  var spec_text = $(this).find('option:selected').text();
+  
+  // Update price based on specification
+  updatePriceBySpecification();
+  
+  // Check stock when specification changes
+  checkStockStatus();
+});
     // Quantity change event
     $('#quantity').on('input', function(){
       calculateTotal();
       checkStockStatus();
     });
     
-    // Function to check stock status
-    function checkStockStatus() {
-      var company_name = $('#company_name').val();
-      var product_name = $('#product_name').val();
-      var unit = $('#unit').val();
-      var quantity = $('#quantity').val();
-      
-      if(company_name && product_name && unit) {
+    // Function to load specifications
+    function loadSpecifications(product_name, company_name) {
+      if(product_name && company_name) {
         $.ajax({
           type: 'POST',
-          url: 'check_stock_status.php',
+          url: 'get_specifications.php',
           data: {
-            company_name: company_name,
             product_name: product_name,
-            unit: unit,
-            quantity: quantity
+            company_name: company_name
           },
           dataType: 'json',
           success: function(response){
-            if(response.success) {
-              var available = parseInt(response.available);
-              var requested = parseInt(quantity);
-              
-              if(available <= 0) {
-                $('#stock_status').html('<div class="alert alert-danger">Out of Stock</div>');
-                $('#addToCart').prop('disabled', true);
-              }
-              else if(available < requested) {
-                $('#stock_status').html('<div class="alert alert-warning">Insufficient Stock! Only ' + available + ' units available.</div>');
-                $('#addToCart').prop('disabled', true);
-              }
-              else if(available <= 5) {
-                $('#stock_status').html('<div class="alert alert-warning">Low Stock! Only ' + available + ' units available.</div>');
-                $('#addToCart').prop('disabled', false);
-              }
-              else {
-                $('#stock_status').html('<div class="alert alert-success">In Stock: ' + available + ' units available</div>');
-                $('#addToCart').prop('disabled', false);
-              }
-            } else {
-              $('#stock_status').html('<div class="alert alert-danger">' + response.message + '</div>');
-              $('#addToCart').prop('disabled', true);
-            }
+            $('#specification').html(response);
           },
           error: function(){
-            $('#stock_status').html('<div class="alert alert-danger">Error checking stock!</div>');
+            $('#specification').html('<option value="">- Select Specification -</option>');
           }
         });
-      } else {
-        $('#stock_status').html('');
       }
     }
-
-    // Add to cart button click
-    $('#addToCart').click(function(){
-      var project_name_text = $('#project_name option:selected').text();
-      var inventory_selection = $('#inventory_selection').val();
-      var company_name = $('#company_name').val();
-      var product_name = $('#product_name').val();
-      var unit = $('#unit').val();
-      var price = $('#price').val();
-      var quantity = $('#quantity').val();
-      var total = $('#total').val();
-
-      if($('#project_name').val() == '' || inventory_selection == '' || company_name == '' || product_name == '' || unit == '' || quantity == '' || quantity < 1){
-        alert('Please fill all required fields including project selection');
-        return;
-      }
-
-      // Check stock availability first
-      $.ajax({
-        type: 'POST',
-        url: 'check_stock_status.php',
-        data: {
-          company_name: company_name,
-          product_name: product_name,
-          unit: unit,
-          quantity: quantity
-        },
-        dataType: 'json',
-        success: function(response){
-          if(response.success){
-            var available = parseInt(response.available);
-            var requested = parseInt(quantity);
-            
-            if(available >= requested) {
-              // Stock is available, proceed to add to cart
-              var cart = JSON.parse(sessionStorage.getItem('cart'));
-              
-              // Check if item already exists in cart
-              var existingItemIndex = -1;
-              for(var i = 0; i < cart.length; i++) {
-                if(cart[i].company_name === company_name && 
-                   cart[i].product_name === product_name && 
-                   cart[i].unit === unit) {
-                  existingItemIndex = i;
-                  break;
-                }
-              }
-              
-              if(existingItemIndex !== -1) {
-                // Update existing item
-                var newQuantity = parseInt(cart[existingItemIndex].quantity) + parseInt(quantity);
-                
-                // Check if stock is sufficient for combined quantity
-                if(newQuantity > available) {
-                  alert('Cannot add more of this item. Insufficient stock!');
-                  return;
-                }
-                
-                cart[existingItemIndex].quantity = newQuantity;
-                cart[existingItemIndex].total = parseFloat(cart[existingItemIndex].price) * newQuantity;
-              } else {
-                // Add new item
-                // Generate unique ID for the item
-                var itemId = Date.now();
-                
-                cart.push({
-                  id: itemId,
-                  inventory_selection: inventory_selection,
-                  company_name: company_name,
-                  product_name: product_name,
-                  unit: unit,
-                  price: parseFloat(price),
-                  quantity: parseInt(quantity),
-                  total: parseFloat(total)
-                });
-              }
-              
-              sessionStorage.setItem('cart', JSON.stringify(cart));
-              
-              // Reset product selection fields only, keep project info
-              $('#inventory_selection').val('').trigger('change');
-              $('#price').val(0);
-              $('#quantity').val(1);
-              $('#total').val(0);
-              $('#stock_status').html('');
-              
-              // Reload cart
-              loadCart();
-              
-              alert('Product added to cart!');
-            } else {
-              // Not enough stock
-              alert('Insufficient stock! Only ' + available + ' units available.');
-              $('#quantity').val(available).focus();
-              calculateTotal();
-            }
-          } else {
-            // Product not found or error
-            alert(response.message);
-          }
-        },
-        error: function(){
-          alert('An error occurred while checking stock. Please try again.');
+   // Function to update price based on specification
+function updatePriceBySpecification() {
+  var company_name = $('#company_name').val();
+  var product_name = $('#product_name').val();
+  var unit = $('#unit').val();
+  var specification = $('#specification').val();
+  
+  if(company_name && product_name && unit && specification && 
+     specification !== '' && specification !== '0' && specification !== '- Select Specification -') {
+    
+    $.ajax({
+      type: 'POST',
+      url: 'get_price_by_specification.php',
+      data: {
+        company_name: company_name,
+        product_name: product_name,
+        unit: unit,
+        specification: specification
+      },
+      dataType: 'json',
+      success: function(response) {
+        if(response.success && response.price) {
+          $('#price').val(response.price);
+          calculateTotal();
+        } else {
+          // If no specific price found, keep price at 0
+          $('#price').val(0);
+          calculateTotal();
         }
-      });
+      },
+      error: function() {
+        // If error occurs, keep price at 0
+        $('#price').val(0);
+        calculateTotal();
+        console.log('Error fetching price for specification');
+      }
     });
+  }
+}
+// Update the checkStockStatus function to ensure proper parameter passing
+function checkStockStatus() {
+  var company_name = $('#company_name').val();
+  var product_name = $('#product_name').val();
+  var unit = $('#unit').val();
+  var specification = $('#specification').val();
+  var quantity = $('#quantity').val();
+  
+  // Only check if all required fields are filled
+  if(company_name && product_name && unit) {
+    
+    // Show loading indicator
+    $('#stock_status').html('<div class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Checking stock...</div>');
+    
+    $.ajax({
+      type: 'POST',
+      url: 'check_stock_status.php',
+      data: {
+        company_name: company_name,
+        product_name: product_name,
+        unit: unit,
+        specification: specification,
+        quantity: quantity
+      },
+      dataType: 'json',
+      success: function(response){
+        if(response.success) {
+          var available = parseInt(response.available);
+          var requested = parseInt(quantity);
+          
+          // Update the display logic here
+          if(available <= 0) {
+            $('#stock_status').html('<div class="alert alert-danger"><i class="fa fa-times-circle"></i> Out of Stock</div>');
+            $('#addToCart').prop('disabled', true);
+          }
+          else if(available < requested) {
+            $('#stock_status').html('<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> Insufficient Stock! Only ' + available + ' units available.</div>');
+            $('#addToCart').prop('disabled', true);
+          }
+          else if(available <= 5) {
+            $('#stock_status').html('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> Low Stock! Only ' + available + ' units available.</div>');
+            $('#addToCart').prop('disabled', false);
+          }
+          else {
+            $('#stock_status').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> In Stock: ' + available + ' units available</div>');
+            $('#addToCart').prop('disabled', false);
+          }
+        } else {
+          $('#stock_status').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + response.message + '</div>');
+          $('#addToCart').prop('disabled', true);
+        }
+      },
+      error: function(){
+        $('#stock_status').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error checking stock! Please try again.</div>');
+      }
+    });
+  } else {
+    // Clear stock status if not all fields are filled
+    $('#stock_status').html('');
+  }
+}
+// Add to cart button click
+$('#addToCart').click(function(){
+  var project_name_text = $('#project_name option:selected').text();
+  var inventory_selection = $('#inventory_selection').val();
+  var company_name = $('#company_name').val();
+  var product_name = $('#product_name').val();
+  var unit = $('#unit').val();
+  var specification = $('#specification').val();
+  var specification_text = $('#specification option:selected').text();
+  var price = $('#price').val();
+  var quantity = $('#quantity').val();
+  var total = $('#total').val();
+
+  // Check if specification is selected
+  if(!specification || specification === '' || specification === '0' || specification === '- Select Specification -') {
+    alert('Please select a specification before adding to cart.');
+    $('#specification').focus();
+    return;
+  }
+
+  if($('#project_name').val() == '' || inventory_selection == '' || company_name == '' || product_name == '' || unit == '' || specification == '' || quantity == '' || quantity < 1){
+    alert('Please fill all required fields including project selection and specification');
+    return;
+  }
+
+  // Check stock availability with specification
+  $.ajax({
+    type: 'POST',
+    url: 'check_stock_status.php',
+    data: {
+      company_name: company_name,
+      product_name: product_name,
+      unit: unit,
+      specification: specification,
+      quantity: quantity
+    },
+    dataType: 'json',
+    success: function(response){
+      if(response.success){
+        var available = parseInt(response.available);
+        var requested = parseInt(quantity);
+        
+        if(available >= requested) {
+          // Stock is available, proceed to add to cart
+          var cart = JSON.parse(sessionStorage.getItem('cart'));
+          
+          // Check if item already exists in cart
+          var existingItemIndex = -1;
+          for(var i = 0; i < cart.length; i++) {
+            if(cart[i].company_name === company_name && 
+               cart[i].product_name === product_name && 
+               cart[i].unit === unit &&
+               cart[i].specification === specification) {
+              existingItemIndex = i;
+              break;
+            }
+          }
+          
+          if(existingItemIndex !== -1) {
+            // Update existing item
+            var newQuantity = parseInt(cart[existingItemIndex].quantity) + parseInt(quantity);
+            
+            // Check if stock is sufficient for combined quantity
+            if(newQuantity > available) {
+              alert('Cannot add more of this item. Insufficient stock!');
+              return;
+            }
+            
+            cart[existingItemIndex].quantity = newQuantity;
+            cart[existingItemIndex].total = parseFloat(cart[existingItemIndex].price) * newQuantity;
+          } else {
+            // Add new item
+            var itemId = Date.now();
+            
+            cart.push({
+              id: itemId,
+              inventory_selection: inventory_selection,
+              company_name: company_name,
+              product_name: product_name,
+              unit: unit,
+              specification: specification,
+              specification_text: specification_text,
+              price: parseFloat(price),
+              quantity: parseInt(quantity),
+              total: parseFloat(total)
+            });
+          }
+          
+          sessionStorage.setItem('cart', JSON.stringify(cart));
+          
+          // Reset product selection fields only, keep project info
+          $('#inventory_selection').val('').trigger('change');
+          $('#price').val(0);
+          $('#quantity').val(1);
+          $('#total').val(0);
+          $('#stock_status').html('');
+          
+          // Reload cart
+          loadCart();
+          
+          alert('Product added to cart!');
+        } else {
+          // Not enough stock
+          alert('Insufficient stock! Only ' + available + ' units available.');
+          $('#quantity').val(available).focus();
+          calculateTotal();
+        }
+      } else {
+        // Product not found or error
+        alert(response.message);
+      }
+    },
+    error: function(){
+      alert('An error occurred while checking stock. Please try again.');
+    }
+  });
+});
 
     // Generate bill button click
     $('#generateBill').click(function(){
@@ -683,7 +819,6 @@
         bill_type: bill_type,
         bill_no: bill_no,
         sale_date: sale_date,
-
         cart: cart
       };
       
@@ -815,38 +950,38 @@
     $('#total').val(total.toFixed(2));
   }
 
-  // Load cart items
-  function loadCart(){
-    var cart = JSON.parse(sessionStorage.getItem('cart'));
-    var html = '';
-    var grandTotal = 0;
-    
-    if(cart.length > 0){
-      cart.forEach(function(item){
-        html += '<tr>';
-        html += '<td>' + item.inventory_selection + '</td>';
-        html += '<td>' + item.company_name + '</td>';
-        html += '<td>' + item.product_name + '</td>';
-        html += '<td>' + item.unit + '</td>';
-        html += '<td>' + item.price.toFixed(2) + '</td>';
-        html += '<td>' + item.quantity + '</td>';
-        html += '<td>' + item.total.toFixed(2) + '</td>';
-        html += '<td>';
-        html += '<button type="button" class="btn btn-primary btn-sm editItem" data-id="' + item.id + '"><i class="fa fa-edit"></i></button> ';
-        html += '<button type="button" class="btn btn-danger btn-sm removeItem" data-id="' + item.id + '"><i class="fa fa-trash"></i></button>';
-        html += '</td>';
-        html += '</tr>';
-        
-        grandTotal += parseFloat(item.total);
-      });
-    } else {
-      html = '<tr><td colspan="8" class="text-center">No items in cart</td></tr>';
-    }
-    
-    $('#cart_body').html(html);
-    $('#grandTotal').text(grandTotal.toFixed(2));
+// Load cart items
+function loadCart(){
+  var cart = JSON.parse(sessionStorage.getItem('cart'));
+  var html = '';
+  var grandTotal = 0;
+  
+  if(cart.length > 0){
+    cart.forEach(function(item){
+      html += '<tr>';
+      html += '<td>' + item.inventory_selection + '</td>';
+      html += '<td>' + item.company_name + '</td>';
+      html += '<td>' + item.product_name + '</td>';
+      html += '<td>' + item.unit + '</td>';
+      html += '<td>' + (item.specification_text || 'N/A') + '</td>'; // Use specification_text
+      html += '<td>' + item.price.toFixed(2) + '</td>';
+      html += '<td>' + item.quantity + '</td>';
+      html += '<td>' + item.total.toFixed(2) + '</td>';
+      html += '<td>';
+      html += '<button type="button" class="btn btn-primary btn-sm editItem" data-id="' + item.id + '"><i class="fa fa-edit"></i></button> ';
+      html += '<button type="button" class="btn btn-danger btn-sm removeItem" data-id="' + item.id + '"><i class="fa fa-trash"></i></button>';
+      html += '</td>';
+      html += '</tr>';
+      
+      grandTotal += parseFloat(item.total);
+    });
+  } else {
+    html = '<tr><td colspan="9" class="text-center">No items in cart</td></tr>';
   }
-
+  
+  $('#cart_body').html(html);
+  $('#grandTotal').text(grandTotal.toFixed(2));
+}
   // Print receipt function
   function printReceipt() {
       // Get the receipt HTML

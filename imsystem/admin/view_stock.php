@@ -39,6 +39,7 @@
                       <th>Inventory Type</th>
                       <th>Product</th>
                       <th>Unit</th>
+                      <th>Specification</th>
                       <th>Price</th>
                       <th>Available Quantity</th>
                       <th>Stock Status</th>
@@ -72,6 +73,7 @@
                             <td>".$row['inventory_selection']."</td>
                             <td>".$row['product_name']."</td>
                             <td>".$row['product_unit']."</td>
+                            <td>".($row['specification'] ?? 'N/A')."</td>
                             <td>".number_format($row['product_selling_price'], 2)."</td>
                             <td>".$quantity."</td>
                             <td>".$status."</td>

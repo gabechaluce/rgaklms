@@ -36,6 +36,8 @@ if(isset($_POST['sales_data'])) {
                 $company_name = $conn->real_escape_string($item['company_name']);
                 $product_name = $conn->real_escape_string($item['product_name']);
                 $unit = $conn->real_escape_string($item['unit']);
+                    $specification_id = $item['specification'];
+    $specification_text = $item['specification_text'];
                 $price = floatval($item['price']);
                 $quantity = intval($item['quantity']);
                 $total = floatval($item['total']);
