@@ -15,7 +15,8 @@
       <li class="header">INVENTORY</li>
       <li><a href="home.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Dashboard</span></a></li>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
-<li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Add New Supplier</span></a></li>
+    <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
+      <li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Supplier</span></a></li>
       <li><a href="product_unit.php"><i class="fas fa-balance-scale nav-icon"></i> <span>&nbsp;Add New Unit</span></a></li>
       <li><a href="product_category.php"><i class="fas fa-list nav-icon"></i> <span>&nbsp;Inventory Category</span></a></li>
       <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Add New Product</span></a></li>
