@@ -37,7 +37,8 @@
           <li><a href="purchase_report.php"><i class="fa fa-circle-o nav-icon"></i> Purchase Report</a></li>
           <li><a href="sales_report.php"><i class="fa fa-circle-o nav-icon"></i> Withdrawal Report</a></li>
           <li><a href="stock_report.php"><i class="fa fa-circle-o nav-icon"></i> Stock Report</a></li>
-          <li><a href="return_report.php"><i class="fa fa-circle-o nav-icon"></i> Borrow and Return Report</a></li>
+          <li><a href="material_report.php"><i class="fa fa-circle-o nav-icon"></i> Material Report</a></li>
+       
         </ul>
       </li>
       <li class="header">CAR TRACK</li>

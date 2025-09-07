@@ -10,11 +10,7 @@
   <div class="content-wrapper">
     <section class="content-header">
       <h1>Restock</h1>
-      <ol class="breadcrumb">
-        <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li>Purchases</li>
-        <li class="active">Add Purchase</li>
-      </ol>
+
     </section>
 
     <section class="content">

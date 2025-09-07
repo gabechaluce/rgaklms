@@ -10,11 +10,7 @@
   <div class="content-wrapper">
     <section class="content-header">
       <h1>Current Stock</h1>
-      <ol class="breadcrumb">
-        <li><a href="home.php"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="sales_master.php">Sales</a></li>
-        <li class="active">View Stock</li>
-      </ol>
+    
     </section>
 
     <section class="content">

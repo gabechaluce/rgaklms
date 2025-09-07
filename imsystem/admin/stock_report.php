@@ -238,11 +238,7 @@ foreach ($rows as $row) {
   <div class="content-wrapper">
     <section class="content-header">
       <h1>Stock Reports</h1>
-      <ol class="breadcrumb">
-        <li><a href="home.php"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li>Inventory</li>
-        <li class="active">Stock Report</li>
-      </ol>
+      
     </section>
 
     <section class="content">
