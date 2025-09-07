@@ -106,18 +106,7 @@
                   <label for="sale_date">Date:</label>
                   <input type="date" class="form-control" name="sale_date" id="sale_date" value="<?php echo date('Y-m-d'); ?>" readonly>
                 </div>
-                <div class="form-group">
-                  <label for="bill_no">Bill No:</label>
-                  <?php 
-                    $bill_id = 0;
-                    $res = $conn->query("SELECT * FROM billing_header ORDER BY id DESC LIMIT 1");
-                    if($row = $res->fetch_assoc()) {
-                      $bill_id = $row['id'];
-                    }
-                    $bill_no = generateBillNo($bill_id);
-                  ?>
-                  <input type="text" class="form-control" name="bill_no" id="bill_no" value="<?php echo $bill_no; ?>" readonly>
-                </div>
+                <!-- genetrate bill number automatically -->
 
               </form>
             </div>
@@ -271,9 +260,9 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <button type="button" class="btn btn-success btn-lg btn-block" id="generateBill">
-                    <i class="fa fa-file-text"></i> Create Material Requisition Form
-                  </button>
+                 <button type="button" class="btn btn-success btn-lg btn-block" id="generateBill">
+  <i class="fa fa-file-text"></i> Create Material Requisition Form
+</button>
                 </div>
               </div>
             </div>
@@ -773,7 +762,7 @@ $('#addToCart').click(function(){
       var dimension = $('#dimension').val();
       var customer_name = $('#customer_name').val();
       var bill_type = $('#bill_type').val();
-      var bill_no = $('#bill_no').val();
+    
       var sale_date = $('#sale_date').val();
 
       var cart = JSON.parse(sessionStorage.getItem('cart'));
@@ -814,7 +803,7 @@ $('#addToCart').click(function(){
         dimension: dimension,
         customer_name: customer_name,
         bill_type: bill_type,
-        bill_no: bill_no,
+       
         sale_date: sale_date,
         cart: cart
       };
@@ -840,7 +829,7 @@ $('#addToCart').click(function(){
             // Reset form
             $('#salesForm')[0].reset();
             $('#sale_date').val('<?php echo date("Y-m-d"); ?>');
-            $('#bill_no').val(response.next_bill_no);
+          
           } else {
             alert('Error: ' + response.message);
           }
@@ -1011,24 +1000,7 @@ function loadCart(){
   }
 </script>
 
-<?php
-function generateBillNo($id) {
-  $nextId = $id + 1;
-  $len = strlen($nextId);
-  
-  if($len == 1) {
-    return "0000" . $nextId;
-  } else if($len == 2) {
-    return "000" . $nextId;
-  } else if($len == 3) {
-    return "00" . $nextId;
-  } else if($len == 4) {
-    return "0" . $nextId;
-  } else {
-    return $nextId;
-  }
-}
-?>
+
 
 <style>
 /* Enhanced styling for readonly fields */

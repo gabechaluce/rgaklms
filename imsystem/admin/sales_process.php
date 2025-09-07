@@ -18,11 +18,11 @@ if(isset($_POST['sales_data'])) {
 
             $customer_name = $conn->real_escape_string($data['customer_name']);
             $bill_type = $conn->real_escape_string($data['bill_type']);
-            $bill_no = $conn->real_escape_string($data['bill_no']);
+           
             $sale_date = $conn->real_escape_string($data['sale_date']);
             
-            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, dimension, full_name, bill_type, date, bill_no) 
-                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$dimension', '$customer_name', '$bill_type', '$sale_date', '$bill_no')";
+            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, dimension, full_name, bill_type, date) 
+                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$dimension', '$customer_name', '$bill_type', '$sale_date')";
             $conn->query($sql);
             $bill_id = $conn->insert_id;
             
@@ -102,13 +102,13 @@ if(isset($_POST['sales_data'])) {
             $conn->commit();
             
             // Generate the receipt HTML
-            $receiptHTML = generateReceiptHTML($project_name, $customer_name, $location, $bill_no, $sale_date, $receiptItems, $grandTotal);
+            $receiptHTML = generateReceiptHTML($project_name, $customer_name, $location,  $sale_date, $receiptItems, $grandTotal);
             
             // Return success with receipt data
             echo json_encode([
                 'success' => true, 
                 'bill_id' => $bill_id,
-                'bill_no' => $bill_no,
+
                 'customer_name' => $customer_name,
                 'project_name' => $project_name,
                 'grand_total' => number_format($grandTotal, 2),
@@ -131,7 +131,7 @@ if(isset($_POST['sales_data'])) {
     echo json_encode(['success' => false, 'message' => 'No data received']);
 }
 
-function generateReceiptHTML($project_name, $customer_name, $location, $bill_no, $sale_date, $items, $grandTotal) {
+function generateReceiptHTML($project_name, $customer_name, $location,  $sale_date, $items, $grandTotal) {
     ob_start();
     ?>
     <div class="receipt-content">
