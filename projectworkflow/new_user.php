@@ -31,7 +31,7 @@
         <option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : '' ?>>Designer</option>
         <option value="2" <?php echo isset($type) && $type == 2 ? 'selected' : '' ?>>Project Coordinator</option>
         <option value="1" <?php echo isset($type) && $type == 1 ? 'selected' : '' ?>>General Manager</option>
-</select>
+                            </select>
                         </div>
                         <?php else: ?>
                             <input type="hidden" name="type" value="3">
