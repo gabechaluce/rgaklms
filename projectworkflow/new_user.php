@@ -22,20 +22,15 @@
                        
                             <select name="type" id="type" class="custom-select custom-select-sm">
         <option value="" disabled selected>Select Role</option>
-              <option value="14" <?php echo isset($type) && $type == 16 ? 'selected' : '' ?>>Sales</option>
-                    <option value="14" <?php echo isset($type) && $type == 15 ? 'selected' : '' ?>>Purchasing</option>
-        <option value="14" <?php echo isset($type) && $type == 14 ? 'selected' : '' ?>>Project Manager</option>
-        <option value="13" <?php echo isset($type) && $type == 13 ? 'selected' : '' ?>>Human Resource</option>
-        <option value="12" <?php echo isset($type) && $type == 12 ? 'selected' : '' ?>>Electrician</option>
-        <option value="11" <?php echo isset($type) && $type == 11 ? 'selected' : '' ?>>Painter</option>
-        <option value="10" <?php echo isset($type) && $type == 10 ? 'selected' : '' ?>>CNC Operator</option>
-        <option value="9" <?php echo isset($type) && $type == 9 ? 'selected' : '' ?>>Fabricator</option>
-        <option value="8" <?php echo isset($type) && $type == 8 ? 'selected' : '' ?>>Production Supervisor</option>
-        <option value="7" <?php echo isset($type) && $type == 7 ? 'selected' : '' ?>>Accounting</option>
-        <option value="6" <?php echo isset($type) && $type == 6 ? 'selected' : '' ?>>Estimator</option>
-        <option value="5" <?php echo isset($type) && $type == 5 ? 'selected' : '' ?>>Inventory Coordinator</option>
-        <option value="4" <?php echo isset($type) && $type == 4 ? 'selected' : '' ?>>Designer</option>
-        <option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : '' ?>>Employee</option>
+              <option value="9" <?php echo isset($type) && $type == 9 ? 'selected' : '' ?>>Sales</option>
+                    <option value="8" <?php echo isset($type) && $type == 8 ? 'selected' : '' ?>>Purchasing</option>
+        <option value="7" <?php echo isset($type) && $type == 7 ? 'selected' : '' ?>>Project Manager</option>
+
+        <option value="6" <?php echo isset($type) && $type == 6 ? 'selected' : '' ?>>Accounting</option>
+        <option value="5" <?php echo isset($type) && $type == 5 ? 'selected' : '' ?>>Estimator</option>
+        <option value="4" <?php echo isset($type) && $type == 4 ? 'selected' : '' ?>>Inventory Coordinator</option>
+        <option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : '' ?>>Designer</option>
+   
         <option value="2" <?php echo isset($type) && $type == 2 ? 'selected' : '' ?>>Project Coordinator</option>
         <option value="1" <?php echo isset($type) && $type == 1 ? 'selected' : '' ?>>General Manager</option>
 </select>
