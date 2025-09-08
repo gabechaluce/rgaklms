@@ -22,15 +22,13 @@
                        
                             <select name="type" id="type" class="custom-select custom-select-sm">
         <option value="" disabled selected>Select Role</option>
-              <option value="9" <?php echo isset($type) && $type == 9 ? 'selected' : '' ?>>Sales</option>
-                    <option value="8" <?php echo isset($type) && $type == 8 ? 'selected' : '' ?>>Purchasing</option>
+        <option value="9" <?php echo isset($type) && $type == 9 ? 'selected' : '' ?>>Sales</option>
+        <option value="8" <?php echo isset($type) && $type == 8 ? 'selected' : '' ?>>Purchasing</option>
         <option value="7" <?php echo isset($type) && $type == 7 ? 'selected' : '' ?>>Project Manager</option>
-
         <option value="6" <?php echo isset($type) && $type == 6 ? 'selected' : '' ?>>Accounting</option>
         <option value="5" <?php echo isset($type) && $type == 5 ? 'selected' : '' ?>>Estimator</option>
         <option value="4" <?php echo isset($type) && $type == 4 ? 'selected' : '' ?>>Inventory Coordinator</option>
         <option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : '' ?>>Designer</option>
-   
         <option value="2" <?php echo isset($type) && $type == 2 ? 'selected' : '' ?>>Project Coordinator</option>
         <option value="1" <?php echo isset($type) && $type == 1 ? 'selected' : '' ?>>General Manager</option>
 </select>
