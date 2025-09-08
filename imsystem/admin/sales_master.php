@@ -90,11 +90,10 @@
                   <label for="dimension">Dimension:</label>
                   <input type="text" class="form-control" name="dimension" id="dimension" required>
                 </div>
-                <div class="form-group">
-                  <label for="customer_name">Customer Name:</label>
-                  <input type="text" class="form-control" name="customer_name" id="customer_name" readonly style="background-color: #f9f9f9;">
-                </div>
-                
+<div class="form-group">
+    <label for="requested_by">Requested By:</label>
+    <input type="text" class="form-control" name="requested_by" id="requested_by" required>
+</div>
                 <div class="form-group">
                   <label for="bill_type">Bill Type:</label>
                   <select class="form-control" name="bill_type" id="bill_type" required>
@@ -311,7 +310,7 @@
       
       if(projectId != ''){
         // Auto-fill customer name and location from data attributes
-        $('#customer_name').val(selectedOption.data('customer'));
+    
         $('#location').val(selectedOption.data('location'));
         
         // Fetch designer information from the project
@@ -750,97 +749,95 @@ $('#addToCart').click(function(){
     }
   });
 });
+// Generate bill button click - UPDATE THIS SECTION
+$('#generateBill').click(function(){
+  var project_id = $('#project_name').val();
+  var project_name = $('#project_name option:selected').text();
+  var module_title = $('#module_title').val();
+  var location = $('#location').val();
+  var remarks = $('#remarks').val();
+  var designer = $('#designer').val();
+  var dimension = $('#dimension').val();
+  var requested_by = $('#requested_by').val(); // CHANGED FROM customer_name
+  var bill_type = $('#bill_type').val();
+  var sale_date = $('#sale_date').val();
 
-    // Generate bill button click
-    $('#generateBill').click(function(){
-      var project_id = $('#project_name').val();
-      var project_name = $('#project_name option:selected').text();
-      var module_title = $('#module_title').val();
-      var location = $('#location').val();
-      var remarks = $('#remarks').val();
-      var designer = $('#designer').val();
-      var dimension = $('#dimension').val();
-      var customer_name = $('#customer_name').val();
-      var bill_type = $('#bill_type').val();
-    
-      var sale_date = $('#sale_date').val();
-
-      var cart = JSON.parse(sessionStorage.getItem('cart'));
+  var cart = JSON.parse(sessionStorage.getItem('cart'));
+  
+  if(project_id == ''){
+    alert('Please select a project');
+    $('#project_name').focus();
+    return;
+  }
+  
+  if(requested_by == ''){ // CHANGED FROM customer_name
+    alert('Please enter who requested the materials');
+    $('#requested_by').focus();
+    return;
+  }
+  
+  if(cart.length == 0){
+    alert('Cart is empty. Please add products.');
+    return;
+  }
+  
+  // Confirm before generating bill
+  if(!confirm('Are you sure you want to generate bill for project: ' + project_name + '?')) {
+    return;
+  }
+  
+  // Show loading indicator
+  var $generateBtn = $('#generateBill');
+  $generateBtn.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+  
+  // Prepare data for submission - UPDATED TO USE requested_by
+  var formData = {
+    project_id: project_id,
+    project_name: project_name,
+    module_title: module_title,
+    location: location, 
+    remarks: remarks,
+    designer: designer,
+    dimension: dimension,
+    requested_by: requested_by, // CHANGED FROM customer_name
+    bill_type: bill_type,
+    sale_date: sale_date,
+    cart: cart
+  };
+  
+  // Submit data to server
+  $.ajax({
+    type: 'POST',
+    url: 'sales_process.php',
+    data: {
+      sales_data: JSON.stringify(formData)
+    },
+    dataType: 'json',
+    success: function(response){
+      if(response.success){
+        // Display receipt in modal
+        $('#receiptModalBody').html(response.receipt_html);
+        $('#receiptModal').modal('show');
+        
+        // Clear cart and reload
+        sessionStorage.setItem('cart', JSON.stringify([]));
+        loadCart();
+        
+        // Reset form
+        $('#salesForm')[0].reset();
+        $('#sale_date').val('<?php echo date("Y-m-d"); ?>');
       
-      if(project_id == ''){
-        alert('Please select a project');
-        $('#project_name').focus();
-        return;
+      } else {
+        alert('Error: ' + response.message);
       }
-      
-      if(customer_name == ''){
-        alert('Please ensure project has customer name');
-        return;
-      }
-      
-      if(cart.length == 0){
-        alert('Cart is empty. Please add products.');
-        return;
-      }
-      
-      // Confirm before generating bill
-      if(!confirm('Are you sure you want to generate bill for project: ' + project_name + '?')) {
-        return;
-      }
-      
-      // Show loading indicator
-      var $generateBtn = $('#generateBill');
-      $generateBtn.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
-      
-      // Prepare data for submission
-      var formData = {
-        project_id: project_id,
-        project_name: project_name,
-        module_title: module_title,
-        location: location, 
-        remarks: remarks,
-        designer: designer,
-        dimension: dimension,
-        customer_name: customer_name,
-        bill_type: bill_type,
-       
-        sale_date: sale_date,
-        cart: cart
-      };
-      
-      // Submit data to server
-      $.ajax({
-        type: 'POST',
-        url: 'sales_process.php',
-        data: {
-          sales_data: JSON.stringify(formData)
-        },
-        dataType: 'json',
-        success: function(response){
-          if(response.success){
-            // Display receipt in modal
-            $('#receiptModalBody').html(response.receipt_html);
-            $('#receiptModal').modal('show');
-            
-            // Clear cart and reload
-            sessionStorage.setItem('cart', JSON.stringify([]));
-            loadCart();
-            
-            // Reset form
-            $('#salesForm')[0].reset();
-            $('#sale_date').val('<?php echo date("Y-m-d"); ?>');
-          
-          } else {
-            alert('Error: ' + response.message);
-          }
-          $generateBtn.html('<i class="fa fa-file-text"></i> Generate Bill').prop('disabled', false);
-        },
-        error: function(){
-          alert('An error occurred. Please try again.');
-          $generateBtn.html('<i class="fa fa-file-text"></i> Generate Bill').prop('disabled', false);
-        }
-      });
-    });
+      $generateBtn.html('<i class="fa fa-file-text"></i> Generate Bill').prop('disabled', false);
+    },
+    error: function(){
+      alert('An error occurred. Please try again.');
+      $generateBtn.html('<i class="fa fa-file-text"></i> Generate Bill').prop('disabled', false);
+    }
+  });
+});
 
     // Remove item from cart
     $(document).on('click', '.removeItem', function(){
@@ -968,36 +965,62 @@ function loadCart(){
   $('#cart_body').html(html);
   $('#grandTotal').text(grandTotal.toFixed(2));
 }
-  // Print receipt function
-  function printReceipt() {
-      // Get the receipt HTML
-      var receiptContent = $('#receiptModalBody').html();
-      
-      // Create a temporary iframe for printing
-      var iframe = document.createElement('iframe');
-      iframe.style.position = 'absolute';
-      iframe.style.left = '-9999px';
-      document.body.appendChild(iframe);
-      
-      var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      iframeDoc.open();
-      iframeDoc.write('<html><head><title>Receipt</title>');
-      iframeDoc.write('<style>body { font-family: Arial; margin: 20px; }');
-      iframeDoc.write('table { width: 100%; border-collapse: collapse; }');
-      iframeDoc.write('th, td { border: 1px solid #000; padding: 8px; text-align: left; }');
-      iframeDoc.write('.text-right { text-align: right; }');
-      iframeDoc.write('</style></head><body>');
-      iframeDoc.write(receiptContent);
-      iframeDoc.write('</body></html>');
-      iframeDoc.close();
-      
-      // Print and clean up
-      setTimeout(function() {
-          iframe.contentWindow.focus();
-          iframe.contentWindow.print();
-          document.body.removeChild(iframe);
-      }, 300);
-  }
+function printReceipt() {
+    // Get the receipt HTML
+    var receiptContent = $('#receiptModalBody').html();
+    
+    // Clean up the content by removing unwanted elements
+    var cleanedContent = receiptContent;
+    
+    // Remove timestamp (dates like "9/8/25, 5:58 PM")
+    cleanedContent = cleanedContent.replace(/\d{1,2}\/\d{1,2}\/\d{2,4},?\s*\d{1,2}:\d{2}\s*(AM|PM)?/gi, '');
+    
+    // Remove "Equipment Inventory" or "Equipments Inventory" text
+    cleanedContent = cleanedContent.replace(/Equipment(s)?\s+Inventory/gi, '');
+    
+    // Remove file paths (localhost links)
+    cleanedContent = cleanedContent.replace(/localhost[^\s]*/gi, '');
+    
+    // Remove page numbers (like "1/1", "1 of 1", etc.)
+    cleanedContent = cleanedContent.replace(/\d+\/\d+|\d+\s+of\s+\d+/gi, '');
+    
+    // Remove extra whitespace and empty lines
+    cleanedContent = cleanedContent.replace(/\s+/g, ' ').trim();
+    
+    // Create a temporary iframe for printing
+    var iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.left = '-9999px';
+    document.body.appendChild(iframe);
+    
+    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write('<!DOCTYPE html><html><head>');
+    iframeDoc.write('<title>Materials Requisition Form</title>');
+    iframeDoc.write('<style>');
+    iframeDoc.write('@media print {');
+    iframeDoc.write('@page { margin: 0.5in; size: A4; }');
+    iframeDoc.write('body { font-family: Arial, sans-serif; margin: 0; padding: 20px; font-size: 12pt; }');
+    iframeDoc.write('table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }');
+    iframeDoc.write('th, td { border: 1px solid #000; padding: 8px; text-align: left; }');
+    iframeDoc.write('th { background-color: #f0f0f0; font-weight: bold; }');
+    iframeDoc.write('.text-right { text-align: right; }');
+    iframeDoc.write('h2 { text-align: center; margin-bottom: 20px; font-size: 16pt; }');
+    iframeDoc.write('.form-info { margin-bottom: 10px; }');
+    iframeDoc.write('.form-info strong { display: inline-block; width: 120px; }');
+    iframeDoc.write('}');
+    iframeDoc.write('</style></head><body>');
+    iframeDoc.write(cleanedContent);
+    iframeDoc.write('</body></html>');
+    iframeDoc.close();
+    
+    // Print and clean up
+    setTimeout(function() {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        document.body.removeChild(iframe);
+    }, 500);
+}
 </script>
 
 

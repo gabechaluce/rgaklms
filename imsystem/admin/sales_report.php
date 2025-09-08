@@ -87,13 +87,7 @@
                              value="<?= isset($_GET['date_to']) ? $_GET['date_to'] : '' ?>">
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Customer Name:</label>
-                      <input type="text" class="form-control" name="customer" 
-                             value="<?= isset($_GET['customer']) ? $_GET['customer'] : '' ?>">
-                    </div>
-                  </div>
+                 
                 </div>
                 <div class="row">
                   <div class="col-md-3">
@@ -132,7 +126,7 @@
 
           <div class="box floating-box">
             <div class="box-header with-border">
-              <h3 class="box-title">Sales Report</h3>
+              <h3 class="box-title"> Report</h3>
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-success btn-sm" onclick="exportToCSV()"><i class="fa fa-file-excel-o"></i> Excel</button>
                 <button type="button" class="btn btn-primary btn-sm" onclick="exportToWord()"><i class="fa fa-file-word-o"></i> Word</button>
@@ -144,10 +138,10 @@
                 <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>Bill No</th>
+                    
                       <th>Date</th>
                       <th>Project Name</th>
-                      <th>Customer</th>
+                   
                       <th>Bill Type</th>
                       <th>Inventory</th>
                       <th>Total Amount</th>
@@ -156,7 +150,7 @@
                   </thead>
                   <tbody>
                     <?php
-                     $sql = "SELECT bh.id, bh.full_name, bh.bill_type, bh.date AS sale_date, bh.bill_no, bh.project_name,
+                     $sql = "SELECT bh.id, bh.requested_by, bh.bill_type, bh.date AS sale_date, bh.bill_no, bh.project_name,
                bd.product_company AS category,
                bd.product_unit AS unit,
                bd.qty AS quantity,
@@ -176,9 +170,7 @@ if(isset($_GET['filter'])){
   if(!empty($_GET['project_name'])){
   $sql .= " AND bh.project_name = '".$_GET['project_name']."'";
   }
-  if(!empty($_GET['customer'])){
-    $sql .= " AND bh.full_name LIKE '%".$_GET['customer']."%'";
-  }
+
   if(!empty($_GET['bill_type'])){
     $sql .= " AND bh.bill_type = '".$_GET['bill_type']."'";
   }
@@ -191,10 +183,10 @@ $sql .= " GROUP BY bh.id ORDER BY bh.date DESC";
                       $query = $conn->query($sql);
                     while($row = $query->fetch_assoc()){echo "
                     <tr>
-                    <td>".$row['bill_no']."</td>
+               
                     <td>".date('M d, Y', strtotime($row['sale_date']))."</td>
                     <td>".$row['project_name']."</td>
-                    <td>".$row['full_name']."</td>
+                  
                     <td>".$row['bill_type']."</td>
                     <td>".$row['inventory_selection']."</td>
                     <td>".number_format($row['total_amount'], 2)."</td>
@@ -224,7 +216,7 @@ $sql .= " GROUP BY bh.id ORDER BY bh.date DESC";
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Bill Details</h4>
+          <h4 class="modal-title">Details</h4>
         </div>
         <div class="modal-body" id="detailsContent">
           <!-- Details will be loaded here via AJAX -->

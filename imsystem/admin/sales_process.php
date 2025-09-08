@@ -15,14 +15,12 @@ if(isset($_POST['sales_data'])) {
             $remarks = $conn->real_escape_string($data['remarks']);
             $designer = $conn->real_escape_string($data['designer']);
             $dimension = $conn->real_escape_string($data['dimension']);
-
-            $customer_name = $conn->real_escape_string($data['customer_name']);
+            $requested_by = $conn->real_escape_string($data['requested_by']); // CHANGED FROM customer_name
             $bill_type = $conn->real_escape_string($data['bill_type']);
-           
             $sale_date = $conn->real_escape_string($data['sale_date']);
             
-            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, dimension, full_name, bill_type, date) 
-                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$dimension', '$customer_name', '$bill_type', '$sale_date')";
+            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, dimension, requested_by, bill_type, date) 
+                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$dimension', '$requested_by', '$bill_type', '$sale_date')";
             $conn->query($sql);
             $bill_id = $conn->insert_id;
             
@@ -36,8 +34,8 @@ if(isset($_POST['sales_data'])) {
                 $company_name = $conn->real_escape_string($item['company_name']);
                 $product_name = $conn->real_escape_string($item['product_name']);
                 $unit = $conn->real_escape_string($item['unit']);
-                    $specification_id = $item['specification'];
-    $specification_text = $item['specification_text'];
+                $specification_id = $item['specification'];
+                $specification_text = $item['specification_text'];
                 $price = floatval($item['price']);
                 $quantity = intval($item['quantity']);
                 $total = floatval($item['total']);
@@ -101,15 +99,14 @@ if(isset($_POST['sales_data'])) {
             // Commit transaction
             $conn->commit();
             
-            // Generate the receipt HTML
-            $receiptHTML = generateReceiptHTML($project_name, $customer_name, $location,  $sale_date, $receiptItems, $grandTotal);
+            // Generate the receipt HTML - UPDATED TO USE requested_by
+            $receiptHTML = generateReceiptHTML($project_name, $requested_by, $location, $sale_date, $receiptItems, $grandTotal);
             
             // Return success with receipt data
             echo json_encode([
                 'success' => true, 
                 'bill_id' => $bill_id,
-
-                'customer_name' => $customer_name,
+                'requested_by' => $requested_by, // CHANGED FROM customer_name
                 'project_name' => $project_name,
                 'grand_total' => number_format($grandTotal, 2),
                 'date' => date('F d, Y', strtotime($sale_date)),
@@ -131,7 +128,8 @@ if(isset($_POST['sales_data'])) {
     echo json_encode(['success' => false, 'message' => 'No data received']);
 }
 
-function generateReceiptHTML($project_name, $customer_name, $location,  $sale_date, $items, $grandTotal) {
+// UPDATED FUNCTION TO USE requested_by INSTEAD OF customer_name
+function generateReceiptHTML($project_name, $requested_by, $location, $sale_date, $items, $grandTotal) {
     ob_start();
     ?>
     <div class="receipt-content">
@@ -169,9 +167,8 @@ function generateReceiptHTML($project_name, $customer_name, $location,  $sale_da
             <p><strong>DATE:</strong> <?= date('F d, Y', strtotime($sale_date)) ?></p>
             <div class="signature-lines">
                 <div class="signature-box">
-                    <p><strong>ACCOUNT NAME:</strong></p>
                     <p><strong>REQUESTED BY:</strong></p>
-                    <p><?= htmlspecialchars($customer_name) ?></p>
+                    <p><?= htmlspecialchars($requested_by) ?></p>
                 </div>
                 <div class="signature-box">
                     <p><strong>LOCATION:</strong></p>

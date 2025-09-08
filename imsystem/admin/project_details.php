@@ -147,8 +147,7 @@ $sql = "SELECT
             bd.product_unit as unit,
             bd.price,
             bd.total as total_amount,
-            bh.date as expense_date,
-            bh.full_name as customer_name
+            bh.date as expense_date
         FROM billing_details bd
         LEFT JOIN billing_header bh ON bd.bill_id = bh.id
         WHERE bh.project_name = '$name' 
@@ -276,9 +275,7 @@ if ($materials_result && $materials_result->num_rows > 0) {
                       <td><?php echo ucwords($name); ?></td>
                     </tr>
                     <tr>
-                      <th>Customer Name</th>
-                      <td><?php echo !empty($full_name) ? ucwords($full_name) : '<small><i>Not specified</i></small>'; ?></td>
-                    </tr>
+
                     <tr>
                       <th>Start Date</th>
                       <td><?php echo date("F d, Y", strtotime($start_date)); ?></td>
@@ -427,7 +424,7 @@ if ($materials_result && $materials_result->num_rows > 0) {
                       <th>Unit</th>
                       <th>Price</th>
                       <th>Total</th>
-                      <th>Customer</th>
+                      <th>Project Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -446,7 +443,7 @@ if ($materials_result && $materials_result->num_rows > 0) {
                           <td><?php echo htmlspecialchars($row['unit']); ?></td>
                           <td class="text-right">₱<?php echo number_format($row['price'], 2); ?></td>
                           <td class="text-right">₱<?php echo number_format($row['total_amount'], 2); ?></td>
-                          <td><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                          <td><?php echo htmlspecialchars($row['project_name']); ?></td>
                         </tr>
                       <?php endforeach; ?>
                     <?php else: ?>
