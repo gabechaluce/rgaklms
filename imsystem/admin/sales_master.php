@@ -86,10 +86,10 @@
                   <label for="designer">Designer:</label>
                   <input type="text" class="form-control" name="designer" id="designer" readonly style="background-color: #f9f9f9;">
                 </div>
-                <div class="form-group">
-                  <label for="dimension">Dimension:</label>
-                  <input type="text" class="form-control" name="dimension" id="dimension" required>
-                </div>
+<div class="form-group">
+  <label for="description">Description:</label>
+  <textarea class="form-control description-field" name="description" id="description" rows="2" readonly style="background-color: #f9f9f9;"></textarea>
+</div>
 <div class="form-group">
     <label for="requested_by">Requested By:</label>
     <input type="text" class="form-control" name="requested_by" id="requested_by" required>
@@ -304,42 +304,49 @@
     loadCart();
 
     // Project selection change event
-    $('#project_name').change(function(){
-      var projectId = $(this).val();
-      var selectedOption = $(this).find('option:selected');
-      
-      if(projectId != ''){
-        // Auto-fill customer name and location from data attributes
+   $('#project_name').change(function(){
+  var projectId = $(this).val();
+  var selectedOption = $(this).find('option:selected');
+  
+  if(projectId != ''){
+    $('#location').val(selectedOption.data('location'));
     
-        $('#location').val(selectedOption.data('location'));
-        
-        // Fetch designer information from the project
-        $.ajax({
-          type: 'POST',
-          url: 'get_project_details.php',
-          data: {project_id: projectId},
-          dataType: 'json',
-          success: function(response){
-            if(response.success) {
-              $('#designer').val(response.designer);
-              // Optionally set dimension if available
-              if(response.dimension) {
-                $('#dimension').val(response.dimension);
-              }
-            }
-          },
-          error: function(){
-            console.log('Error fetching project details');
+    $.ajax({
+      type: 'POST',
+      url: 'get_project_details.php',
+      data: {project_id: projectId},
+      dataType: 'json',
+      success: function(response){
+        if(response.success) {
+          $('#designer').val(response.designer);
+          if(response.description) {
+            // Clean and set description
+            var cleanDescription = $('<div>').html(response.description).text();
+            $('#description').val(cleanDescription);
+            
+            // Auto-resize if needed
+            autoResizeTextarea(document.getElementById('description'));
           }
-        });
-      } else {
-        // Clear fields when no project selected
-        $('#customer_name').val('');
-        $('#location').val('');
-        $('#designer').val('');
-        $('#dimension').val('');
+        }
+      },
+      error: function(){
+        console.log('Error fetching project details');
       }
     });
+  } else {
+    $('#location').val('');
+    $('#designer').val('');
+    $('#description').val('');
+  }
+});
+
+// Helper function to auto-resize textarea
+function autoResizeTextarea(element) {
+  if(element.scrollHeight > element.clientHeight && element.scrollHeight <= 100) {
+    element.style.height = 'auto';
+    element.style.height = Math.min(element.scrollHeight, 100) + 'px';
+  }
+}
 
     // Change Inventory Selection
 $('#inventory_selection').change(function(){
@@ -757,7 +764,7 @@ $('#generateBill').click(function(){
   var location = $('#location').val();
   var remarks = $('#remarks').val();
   var designer = $('#designer').val();
-  var dimension = $('#dimension').val();
+    var description = $('#description').val(); // Changed from dimension
   var requested_by = $('#requested_by').val(); // CHANGED FROM customer_name
   var bill_type = $('#bill_type').val();
   var sale_date = $('#sale_date').val();
@@ -798,7 +805,7 @@ $('#generateBill').click(function(){
     location: location, 
     remarks: remarks,
     designer: designer,
-    dimension: dimension,
+    description: description, // Changed from dimension
     requested_by: requested_by, // CHANGED FROM customer_name
     bill_type: bill_type,
     sale_date: sale_date,
@@ -1196,6 +1203,71 @@ function printReceipt() {
 .manual-entry {
   background-color: #fff3cd !important;
   border-color: #ffc107;
+}
+/* Enhanced Description Field Styling */
+.form-group textarea.form-control,
+.form-group input.form-control[name="description"] {
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  min-height: 38px;
+  max-height: 100px;
+  overflow-y: auto;
+  resize: vertical;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* For long descriptions, convert input to textarea */
+.description-field {
+  min-height: 38px;
+  max-height: 100px;
+  overflow-y: auto;
+  resize: vertical;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* Custom scrollbar styling */
+.description-field::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description-field::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.description-field::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.description-field::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Readonly field styling */
+.form-control[readonly].description-field {
+  background-color: #f9f9f9 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Focus state */
+.description-field:focus {
+  border-color: #3c8dbc;
+  box-shadow: 0 0 5px rgba(60, 141, 188, 0.3);
+  outline: none;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .description-field {
+    max-height: 80px;
+  }
 }
 </style>
 </body>

@@ -42,20 +42,20 @@ try {
     $result = $stmt->get_result();
     
     if ($row = $result->fetch_assoc()) {
-        $response = [
-            'success' => true,
-            'project_name' => $row['name'],
-            'customer_name' => $row['full_name'],
-            'location' => $row['location'],
-            'description' => $row['description'],
-            'designer' => $row['designer_names'] ?: 'Not Assigned',
-            'manager' => $row['manager_names'] ?: 'Not Assigned',
-            'dimension' => $row['dimension'] ?: '',
-            'project_cost' => $row['project_cost'] ?: '0.00',
-            'status' => $row['status'],
-            'start_date' => $row['start_date'],
-            'end_date' => $row['end_date']
-        ];
+     $response = [
+    'success' => true,
+    'project_name' => $row['name'],
+    'customer_name' => $row['full_name'],
+    'location' => $row['location'],
+    'description' => strip_tags(html_entity_decode($row['description'], ENT_QUOTES, 'UTF-8')), // Clean HTML
+    'designer' => $row['designer_names'] ?: 'Not Assigned',
+    'manager' => $row['manager_names'] ?: 'Not Assigned',
+    'dimension' => $row['dimension'] ?: '',
+    'project_cost' => $row['project_cost'] ?: '0.00',
+    'status' => $row['status'],
+    'start_date' => $row['start_date'],
+    'end_date' => $row['end_date']
+];
     } else {
         $response = [
             'success' => false,

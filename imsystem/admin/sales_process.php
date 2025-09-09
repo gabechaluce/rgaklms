@@ -14,13 +14,13 @@ if(isset($_POST['sales_data'])) {
             $location = $conn->real_escape_string($data['location']);
             $remarks = $conn->real_escape_string($data['remarks']);
             $designer = $conn->real_escape_string($data['designer']);
-            $dimension = $conn->real_escape_string($data['dimension']);
+            $description = $conn->real_escape_string($data['description']);
             $requested_by = $conn->real_escape_string($data['requested_by']); // CHANGED FROM customer_name
             $bill_type = $conn->real_escape_string($data['bill_type']);
             $sale_date = $conn->real_escape_string($data['sale_date']);
-            
-            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, dimension, requested_by, bill_type, date) 
-                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$dimension', '$requested_by', '$bill_type', '$sale_date')";
+
+            $sql = "INSERT INTO billing_header (project_name, module_title, location, remarks, designer, description, requested_by, bill_type, date) 
+                    VALUES ('$project_name', '$module_title', '$location', '$remarks', '$designer', '$description', '$requested_by', '$bill_type', '$sale_date')";
             $conn->query($sql);
             $bill_id = $conn->insert_id;
             
