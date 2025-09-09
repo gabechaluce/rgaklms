@@ -13,9 +13,9 @@ if ($qry && $qry->num_rows > 0) {
     
     // Basic project information
     $name = $project['name'];
-    $full_name = isset($project['full_name']) ? $project['full_name'] : '';
+
     $location = isset($project['location']) ? $project['location'] : '';
-    $dimension = isset($project['dimension']) ? $project['dimension'] : '';
+
     $project_cost = isset($project['project_cost']) ? $project['project_cost'] : '';
     
     // Dates and status

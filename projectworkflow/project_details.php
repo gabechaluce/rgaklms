@@ -404,19 +404,12 @@
     <dl>
         <dt><b class="border-bottom border-primary">Project Name</b></dt>
         <dd><?php echo ucwords($name) ?></dd>
-        
-        <!-- Add new Customer Name field -->
-        <dt><b class="border-bottom border-primary">Customer Name</b></dt>
-        <dd><?php echo !empty($full_name) ? ucwords($full_name) : '<small><i>Not specified</i></small>' ?></dd>
-        
+     
         <!-- Add new Location field -->
         <dt><b class="border-bottom border-primary">Location</b></dt>
         <dd><?php echo !empty($location) ? ucwords($location) : '<small><i>Not specified</i></small>' ?></dd>
         
-        <!-- Add new Dimension field -->
-        <dt><b class="border-bottom border-primary">Dimension</b></dt>
-        <dd><?php echo !empty($dimension) ? $dimension : '<small><i>Not specified</i></small>' ?></dd>
-        
+     
         <!-- Add new Project Cost field -->
         <dt><b class="border-bottom border-primary">Project Cost</b></dt>
         <dd><?php echo !empty($project_cost) ? '₱' . number_format($project_cost, 2) : '<small><i>Not specified</i></small>' ?></dd>

@@ -14,12 +14,7 @@
             <input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" REQUIRED>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="" class="control-label">Customer Name</label>
-         <input type="text" class="form-control form-control-sm" name="full_name" value="<?php echo isset($full_name) ? $full_name : '' ?>" REQUIRED placeholder="Enter customer full name">
-        </div>
-    </div>
+
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -29,10 +24,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="form-group">
-            <label for="" class="control-label">Dimension</label>
-<input type="text" class="form-control form-control-sm" name="dimension" value="<?php echo isset($dimension) ? $dimension : '' ?>" placeholder="e.g., 10m x 8m x 3m">
-        </div>
+
     </div>
     <div class="col-md-4">
         <div class="form-group">
