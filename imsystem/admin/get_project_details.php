@@ -27,8 +27,8 @@ try {
                 GROUP_CONCAT(DISTINCT CONCAT(u_designer.firstname, ' ', u_designer.lastname) SEPARATOR ', ') as designer_names,
                 GROUP_CONCAT(DISTINCT CONCAT(u_manager.firstname, ' ', u_manager.lastname) SEPARATOR ', ') as manager_names
             FROM project_list p
-            LEFT JOIN users u_designer ON FIND_IN_SET(u_designer.id, p.designer_ids) AND u_designer.type = 4
-            LEFT JOIN users u_manager ON FIND_IN_SET(u_manager.id, p.manager_id) AND u_manager.type = 14
+            LEFT JOIN users u_designer ON FIND_IN_SET(u_designer.id, p.designer_ids) AND u_designer.type = 3
+            LEFT JOIN users u_manager ON FIND_IN_SET(u_manager.id, p.manager_id) AND u_manager.type = 7
             WHERE p.id = ?
             GROUP BY p.id";
     
