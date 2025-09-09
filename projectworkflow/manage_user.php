@@ -38,22 +38,14 @@ foreach($user->fetch_array() as $k =>$v){
 						</div>
 						
 						<div class="form-group">
-							<label for="email" class="control-label">Email <span class="text-danger">*</span></label>
-							<input type="email" name="email" id="email" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email']: '' ?>" required autocomplete="off">
+							<label for="email" class="control-label">Username <span class="text-danger">*</span></label>
+							<input type="text" name="email" id="email" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email']: '' ?>" required autocomplete="off">
 						</div>
 						
 						<div class="form-group">
 							<label for="password" class="control-label">Password</label>
 							<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
 							<small class="text-muted"><i>Leave this blank if you don't want to change the password.</i></small>
-						</div>
-						
-						<div class="form-group">
-							<label for="type" class="control-label">User Type <span class="text-danger">*</span></label>
-							<select name="type" id="type" class="form-control" required>
-								<option value="1" <?php echo (isset($meta['type']) && $meta['type'] == 1) ? 'selected' : '' ?>>Administrator</option>
-								<option value="2" <?php echo (isset($meta['type']) && $meta['type'] == 2) ? 'selected' : '' ?>>Staff</option>
-							</select>
 						</div>
 					</div>
 				</div>
@@ -78,12 +70,7 @@ foreach($user->fetch_array() as $k =>$v){
 					</div>
 				</div>
 				
-				<div class="card mt-3">
-					<div class="card-body">
-						<button type="submit" class="btn btn-primary btn-block btn-lg">Save Changes</button>
-						<a href="javascript:history.back()" class="btn btn-secondary btn-block mt-2">Cancel</a>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 	</form>
@@ -91,8 +78,8 @@ foreach($user->fetch_array() as $k =>$v){
 
 <style>
 	img#cimg{
-		height: 200px;
-		width: 200px;
+		height: 120px;
+		width: 120px;
 		object-fit: cover;
 		border-radius: 50%;
 		border: 3px solid #dee2e6;
@@ -150,14 +137,6 @@ foreach($user->fetch_array() as $k =>$v){
 			
 			if(!firstname || !lastname || !email) {
 				$('#msg').html('<div class="alert alert-danger">Please fill in all required fields</div>');
-				end_load();
-				return;
-			}
-			
-			// Email validation
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if(!emailRegex.test(email)) {
-				$('#msg').html('<div class="alert alert-danger">Please enter a valid email address</div>');
 				end_load();
 				return;
 			}
