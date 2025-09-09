@@ -7,6 +7,12 @@
 			<form action="" id="manage-project">
 				<input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? $_GET['id'] : (isset($id) ? $id : ''); ?>">
 				
+				<!-- Get current user type -->
+				<?php 
+				$user_type = isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '';
+				$is_project_manager = ($user_type == 7); // type 7 is Project Manager
+				?>
+				
 				<!-- Modified form fields section based on new_project structure -->
 				<div class="row">
 					<div class="col-md-6">
@@ -15,7 +21,6 @@
 							<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" REQUIRED>
 						</div>
 					</div>
-				
 				</div>
 				
 				<div class="row">
@@ -28,8 +33,18 @@
 					
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="" class="control-label">Project Cost</label>
-							<input type="number" step="0.01" class="form-control form-control-sm" name="project_cost" value="<?php echo isset($project_cost) ? $project_cost : '' ?>" placeholder="0.00">
+							<?php 
+							// Check if current user can edit project cost (Estimator or Designer)
+							$can_edit_cost = ($user_type == 5 || $user_type == 3); // 5=Estimator, 3=Designer
+							$cost_disabled = $can_edit_cost ? '' : 'disabled';
+							$cost_class = $can_edit_cost ? 'form-control form-control-sm' : 'form-control form-control-sm disabled-select';
+							?>
+							<label for="" class="control-label">Project Cost
+								<?php if (!$can_edit_cost): ?>
+									<small class="text-muted">(Only Estimators and Designers can edit)</small>
+								<?php endif; ?>
+							</label>
+							<input type="number" step="0.01" class="<?php echo $cost_class; ?>" name="project_cost" value="<?php echo isset($project_cost) ? $project_cost : '0.00' ?>" <?php echo $cost_disabled; ?>>
 						</div>
 					</div>
 				</div>
@@ -69,11 +84,19 @@
 				</div>
 				
 				<div class="row">
-					<!-- Project Manager field - now visible for all user types -->
+					<!-- Project Manager field - only editable by Project Managers -->
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="" class="control-label">Project Manager</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="manager_id[]" REQUIRED>
+							<?php 
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
+							?>
+							<label for="" class="control-label">Project Manager
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="manager_id[]" <?php echo $disabled_attr; ?> REQUIRED>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 7 order by concat(firstname,' ',lastname) asc ");
@@ -87,11 +110,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$user_type = isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '';
-							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
 							?>
-							<label for="" class="control-label">Project Team Members</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" <?php echo $required_attr; ?>>
+							<label for="" class="control-label">Project Team Members
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="user_ids[]" <?php echo $disabled_attr; ?>>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 9 order by concat(firstname,' ',lastname) asc ");
@@ -108,10 +135,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
 							?>
-							<label for="" class="control-label">Project Coordinator</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="coordinator_ids[]" <?php echo $required_attr; ?>>
+							<label for="" class="control-label">Project Coordinator
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="coordinator_ids[]" <?php echo $disabled_attr; ?>>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
@@ -125,10 +157,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
 							?>
-							<label for="" class="control-label">Designer</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="designer_ids[]" <?php echo $required_attr; ?>>
+							<label for="" class="control-label">Designer
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="designer_ids[]" <?php echo $disabled_attr; ?>>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
@@ -145,10 +182,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
 							?>
-							<label for="" class="control-label">Project Estimator</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="estimator_ids[]" <?php echo $required_attr; ?>>
+							<label for="" class="control-label">Project Estimator
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="estimator_ids[]" <?php echo $disabled_attr; ?>>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
@@ -162,10 +204,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
+							$disabled_attr = $is_project_manager ? '' : 'disabled';
+							$select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
 							?>
-							<label for="" class="control-label">Inventory Coordinator</label>
-							<select class="form-control form-control-sm select2" multiple="multiple" name="inventory_ids[]" <?php echo $required_attr; ?>>
+							<label for="" class="control-label">Inventory Coordinator
+								<?php if (!$is_project_manager): ?>
+									<small class="text-muted">(Only Project Managers can select)</small>
+								<?php endif; ?>
+							</label>
+							<select class="<?php echo $select_class; ?>" multiple="multiple" name="inventory_ids[]" <?php echo $disabled_attr; ?>>
 								<option></option>
 								<?php 
 								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 4 order by concat(firstname,' ',lastname) asc ");
@@ -372,9 +419,17 @@ $(document).ready(function() {
 		});
 	});
 
+	// Initialize Select2 with conditional disabling
 	$('.select2').select2({
 		placeholder: "Please select here",
 		width: "100%"
+	});
+
+	// Disable select2 dropdowns for non-project managers
+	$('.select2.disabled-select').select2('destroy').select2({
+		placeholder: "Only Project Managers can select",
+		width: "100%",
+		disabled: true
 	});
 
 	// Drag and drop file handling
@@ -408,6 +463,10 @@ $(document).ready(function() {
 $('#manage-project').submit(function(e) {
 	e.preventDefault();
 	start_load();
+	
+	// Before submitting, temporarily enable disabled select fields to include their values
+	$('.disabled-select').prop('disabled', false);
+	
 	let formData = new FormData($(this)[0]);
 	$.ajax({
 		url: 'ajax.php?action=save_project',
@@ -429,6 +488,11 @@ $('#manage-project').submit(function(e) {
 		error: function(xhr, status, error) {
 			alert_toast('An error occurred: ' + error, "danger");
 			console.error(xhr.responseText);
+		},
+		complete: function() {
+			// Re-disable the select fields after submission
+			$('.disabled-select').prop('disabled', true);
+			end_load();
 		}
 	});
 });
@@ -518,6 +582,32 @@ input[type="number"] {
 
 .project-description .file-attachment a:hover {
 	text-decoration: underline;
+}
+
+/* Disabled select styling */
+.disabled-select {
+	background-color: #f8f9fa !important;
+	color: #6c757d !important;
+	cursor: not-allowed !important;
+}
+
+.select2-container--default .select2-selection--multiple.disabled-select,
+.select2-container--default.select2-container--disabled .select2-selection--multiple {
+	background-color: #f8f9fa !important;
+	color: #6c757d !important;
+	cursor: not-allowed !important;
+	border-color: #dee2e6 !important;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection__choice {
+	background-color: #e9ecef !important;
+	color: #6c757d !important;
+}
+
+/* Visual indicator for restricted fields */
+.form-group label small.text-muted {
+	font-style: italic;
+	font-size: 0.75em;
 }
 </style>
 </body>

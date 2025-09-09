@@ -159,13 +159,7 @@ $page_title = "Edit Project: " . htmlspecialchars($name);
     <!-- Page Header -->
     <div class="page-header">
         <h4>Edit Project</h4>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php?page=home">Home</a></li>
-                <li class="breadcrumb-item"><a href="index.php?page=project_list">Projects</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit Project</li>
-            </ol>
-        </nav>
+        
     </div>
 
     <?php 

@@ -14,7 +14,6 @@
             <input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" REQUIRED>
         </div>
     </div>
-
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -23,13 +22,22 @@
          <input type="text" class="form-control form-control-sm" name="location" value="<?php echo isset($location) ? $location : '' ?>" REQUIRED placeholder="Project location">
         </div>
     </div>
-    <div class="col-md-4">
 
-    </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="" class="control-label">Project Cost</label>
-<input type="number" step="0.01" class="form-control form-control-sm" name="project_cost" value="<?php echo isset($project_cost) ? $project_cost : '' ?>" placeholder="0.00">
+            <?php 
+            // Check if current user can edit project cost (Estimator or Designer)
+            $user_type = isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '';
+            $can_edit_cost = ($user_type == 5 || $user_type == 3); // 5=Estimator, 3=Designer
+            $cost_disabled = $can_edit_cost ? '' : 'disabled';
+            $cost_class = $can_edit_cost ? 'form-control form-control-sm' : 'form-control form-control-sm disabled-select';
+            ?>
+            <label for="" class="control-label">Project Cost
+                <?php if (!$can_edit_cost): ?>
+                    <small class="text-muted">(Only Estimators and Designers can edit)</small>
+                <?php endif; ?>
+            </label>
+            <input type="number" step="0.01" class="<?php echo $cost_class; ?>" name="project_cost" value="<?php echo isset($project_cost) ? $project_cost : '0.00' ?>" <?php echo $cost_disabled; ?>>
         </div>
     </div>
 </div>
@@ -92,10 +100,16 @@
             <?php 
             // Get current user type
             $user_type = isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '';
-        
+            $is_project_manager = ($user_type == 7); // type 7 is Project Manager
+            $disabled_attr = $is_project_manager ? '' : 'disabled';
+            $select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
             ?>
-            <label for="" class="control-label">Project Team Members</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">
+            <label for="" class="control-label">Project Team Members 
+                <?php if (!$is_project_manager): ?>
+                    <small class="text-muted">(Only Project Managers can select)</small>
+                <?php endif; ?>
+            </label>
+            <select class="<?php echo $select_class; ?>" multiple="multiple" name="user_ids[]" <?php echo $disabled_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 9 order by concat(firstname,' ',lastname) asc ");
@@ -111,10 +125,15 @@
 <div class="col-md-6">
         <div class="form-group">
             <?php 
-  
+            $disabled_attr = $is_project_manager ? '' : 'disabled';
+            $select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
             ?>
-            <label for="" class="control-label">Project Coordinator</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="coordinator_ids[]" >
+            <label for="" class="control-label">Project Coordinator
+                <?php if (!$is_project_manager): ?>
+                    <small class="text-muted">(Only Project Managers can select)</small>
+                <?php endif; ?>
+            </label>
+            <select class="<?php echo $select_class; ?>" multiple="multiple" name="coordinator_ids[]" <?php echo $disabled_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
@@ -128,10 +147,15 @@
     <div class="col-md-6">
         <div class="form-group">
             <?php 
-
+            $disabled_attr = $is_project_manager ? '' : 'disabled';
+            $select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
             ?>
-            <label for="" class="control-label">Designer</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="designer_ids[]" >
+            <label for="" class="control-label">Designer
+                <?php if (!$is_project_manager): ?>
+                    <small class="text-muted">(Only Project Managers can select)</small>
+                <?php endif; ?>
+            </label>
+            <select class="<?php echo $select_class; ?>" multiple="multiple" name="designer_ids[]" <?php echo $disabled_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
@@ -147,10 +171,15 @@
     <div class="col-md-6">
         <div class="form-group">
             <?php 
-
+            $disabled_attr = $is_project_manager ? '' : 'disabled';
+            $select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
             ?>
-            <label for="" class="control-label">Project Estimator</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="estimator_ids[]" >
+            <label for="" class="control-label">Project Estimator
+                <?php if (!$is_project_manager): ?>
+                    <small class="text-muted">(Only Project Managers can select)</small>
+                <?php endif; ?>
+            </label>
+            <select class="<?php echo $select_class; ?>" multiple="multiple" name="estimator_ids[]" <?php echo $disabled_attr; ?>>
                 <option></option>
                 <?php 
                 $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
@@ -164,13 +193,18 @@
     <div class="col-md-6">
         <div class="form-group">
             <?php 
-
+            $disabled_attr = $is_project_manager ? '' : 'disabled';
+            $select_class = $is_project_manager ? 'form-control form-control-sm select2' : 'form-control form-control-sm select2 disabled-select';
             ?>
-            <label for="" class="control-label">Inventory Coordinator</label>
-            <select class="form-control form-control-sm select2" multiple="multiple" name="inventory_ids[]" >
+            <label for="" class="control-label">Inventory Coordinator
+                <?php if (!$is_project_manager): ?>
+                    <small class="text-muted">(Only Project Managers can select)</small>
+                <?php endif; ?>
+            </label>
+            <select class="<?php echo $select_class; ?>" multiple="multiple" name="inventory_ids[]" <?php echo $disabled_attr; ?>>
                 <option></option>
                 <?php 
-                $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
+                $employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 4 order by concat(firstname,' ',lastname) asc ");
                 while($row= $employees->fetch_assoc()):
                 ?>
                 <option value="<?php echo $row['id'] ?>" <?php echo isset($inventory_ids) && in_array($row['id'],explode(',',$inventory_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -421,48 +455,65 @@ $(document).ready(function() {
     }
 });
 
-// Initialize Select2
-	$('.select2').select2({
-		placeholder: "Please select here",
-		width: "100%"
-	});
+// Initialize Select2 with conditional disabling
+$('.select2').select2({
+    placeholder: "Please select here",
+    width: "100%"
+});
 
-	// Custom handling for description box focus/blur
-	const descriptionField = $('.note-editable');
+// Disable select2 dropdowns for non-project managers
+$('.select2.disabled-select').select2('destroy').select2({
+    placeholder: "Only Project Managers can select",
+    width: "100%",
+    disabled: true
+});
 
-	descriptionField.on('focus', function () {
-		if (descriptionField.text() === "Input Equipment will be used in the Project and Description of the Project...") {
-			descriptionField.text('');
-		}
-	});
+// Custom handling for description box focus/blur
+const descriptionField = $('.note-editable');
 
-	descriptionField.on('blur', function () {
-		if (descriptionField.text().trim() === '') {
-			descriptionField.text("Input Equipment will be used in the Project and Description of the Project...");
-		}
-	});
+descriptionField.on('focus', function () {
+    if (descriptionField.text() === "Input Equipment will be used in the Project and Description of the Project...") {
+        descriptionField.text('');
+    }
+});
 
-	// Handle form submission
-	$('#manage-project').submit(function (e) {
-		e.preventDefault();
-		start_load();
-		$.ajax({
-			url: 'ajax.php?action=save_project',
-			data: new FormData($(this)[0]),
-			cache: false,
-			contentType: false,
-			processData: false,
-			method: 'POST',
-			success: function (resp) {
-				if (resp == 1) {
-					alert_toast('Data successfully saved', "success");
-					setTimeout(function () {
-						location.reload();
-					}, 1500);
-				}
-			}
-		});
-	});
+descriptionField.on('blur', function () {
+    if (descriptionField.text().trim() === '') {
+        descriptionField.text("Input Equipment will be used in the Project and Description of the Project...");
+    }
+});
+
+// Handle form submission
+$('#manage-project').submit(function (e) {
+    e.preventDefault();
+    start_load();
+    
+    // Before submitting, temporarily enable disabled select fields to include their values
+    $('.disabled-select').prop('disabled', false);
+    
+    $.ajax({
+        url: 'ajax.php?action=save_project',
+        data: new FormData($(this)[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        success: function (resp) {
+            if (resp == 1) {
+                alert_toast('Data successfully saved', "success");
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            }
+        },
+        complete: function() {
+            // Re-disable the select fields after submission
+            $('.disabled-select').prop('disabled', true);
+            end_load();
+        }
+    });
+});
+
 });
         
 </script>
@@ -471,6 +522,7 @@ $(document).ready(function() {
 body, .wrapper, .content-wrapper {
     background-color:#f4f1ed !important;
 }
+
 .upload-area {
     border: 2px dashed #ccc;
     border-radius: 5px;
@@ -519,52 +571,54 @@ body, .wrapper, .content-wrapper {
     background: #fff;
     border-radius: 5px;
 }
+
 /* File attachment styling within description */
 .project-description .file-attachment {
-        display: flex;
-        align-items: center;
-        margin: 10px 0;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-    }
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
 
-    .project-description .file-attachment i {
-        font-size: 24px;
-        margin-right: 10px;
-    }
+.project-description .file-attachment i {
+    font-size: 24px;
+    margin-right: 10px;
+}
 
-    .project-description .fa-file-pdf {
-        color: #dc3545;
-    }
+.project-description .fa-file-pdf {
+    color: #dc3545;
+}
 
-    .project-description .fa-file-word {
-        color: #2b579a;
-    }
+.project-description .fa-file-word {
+    color: #2b579a;
+}
 
-    .project-description .fa-file-excel {
-        color: #217346;
-    }
+.project-description .fa-file-excel {
+    color: #217346;
+}
 
-    .project-description .fa-file-powerpoint {
-        color: #d24726;
-    }
+.project-description .fa-file-powerpoint {
+    color: #d24726;
+}
 
-    .project-description .fa-file-image {
-        color: #20c997;
-    }
+.project-description .fa-file-image {
+    color: #20c997;
+}
 
-    .project-description .file-attachment a {
-        color: #333;
-        text-decoration: none;
-        font-weight: 500;
-    }
+.project-description .file-attachment a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
 
-    .project-description .file-attachment a:hover {
-        text-decoration: underline;
-    }
-    .uploaded-file {
+.project-description .file-attachment a:hover {
+    text-decoration: underline;
+}
+
+.uploaded-file {
     position: relative;
     margin: 10px;
     transition: opacity 0.3s;
@@ -618,6 +672,32 @@ input[type="number"] {
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
     border-radius: 0.25rem;
+}
+
+/* Disabled select styling */
+.disabled-select {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+.select2-container--default .select2-selection--multiple.disabled-select,
+.select2-container--default.select2-container--disabled .select2-selection--multiple {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+    border-color: #dee2e6 !important;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection__choice {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+}
+
+/* Visual indicator for restricted fields */
+.form-group label small.text-muted {
+    font-style: italic;
+    font-size: 0.75em;
 }
 </style>
 </body>

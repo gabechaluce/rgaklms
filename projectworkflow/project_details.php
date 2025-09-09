@@ -389,7 +389,8 @@
             <div class="col-md-12">
             <div class="callout callout-info" style="position: relative;">
         <!-- Add Edit Button Here -->
-        <?php if($_SESSION['login_type'] == 1 || $is_manager): ?>
+        <?php if($_SESSION['login_type'] == 1 || $is_manager || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 3): ?>
+
             <div class="edit-project-btn">
         <a class="btn btn-sm btn-primary" href="./index.php?page=edit_project&id=<?php echo $id ?>">
             <i class="fa fa-edit"></i> Edit Project
