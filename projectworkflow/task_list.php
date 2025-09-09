@@ -39,7 +39,7 @@
                         $where = "";
                         if($_SESSION['login_type'] == 2){
                             $where = " where p.manager_id = '{$_SESSION['login_id']}' ";
-                        }elseif($_SESSION['login_type'] == 3){
+                        }elseif($_SESSION['login_type'] == 9){
                             $where = " where concat('[',REPLACE(p.user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
                         }
                         
