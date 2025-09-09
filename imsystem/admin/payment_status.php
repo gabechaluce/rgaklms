@@ -38,10 +38,6 @@
                 } else {
                     $_SESSION['error'][] = "You do not have permission to update payment status";
                 }
-                
-                // Redirect to avoid form resubmission
-        
-                
             } else {
                 $_SESSION['error'][] = "Missing project ID or payment status";
             }
