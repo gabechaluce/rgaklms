@@ -16,11 +16,12 @@
       <li><a href="home.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Dashboard</span></a></li>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
     <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
+        <li><a href="payment_status.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects Payment</span></a></li>
       <li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Supplier</span></a></li>
       <li><a href="product_unit.php"><i class="fas fa-balance-scale nav-icon"></i> <span>&nbsp;Add New Unit</span></a></li>
       <li><a href="product_category.php"><i class="fas fa-list nav-icon"></i> <span>&nbsp;Inventory Category</span></a></li>
       <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Add New Material</span></a></li>
-      <li><a href="specification.php"><i class="fas fa-list-alt nav-icon"></i> <span>&nbsp;Product Specifications</span></a></li>
+      <li><a href="specification.php"><i class="fas fa-list-alt nav-icon"></i> <span>&nbsp;Material Specifications</span></a></li>
       <li><a href="purchase_master.php"><i class="fas fa-cart-shopping nav-icon"></i> <span>Purchases </span></a></li>
       <li><a href="sales_master.php">&nbsp;<i class="fas fa-peso-sign nav-icon"></i> <span>&nbsp;Withdrawal </span></a></li>
       <li><a href="view_stock.php"><i class="fa-brands fa-stack-overflow nav-icon"></i> <span>&nbsp;Product Stock</span></a></li>
