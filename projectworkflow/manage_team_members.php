@@ -12,7 +12,7 @@ if(isset($_GET['pid'])){
         $current_user_ids = !empty($project['user_ids']) ? explode(',', $project['user_ids']) : array();
         
         // Get all users who are not designers or estimators
-        $users = $conn->query("SELECT *, CONCAT(lastname, ', ', firstname) as name FROM users WHERE type != 4 AND type != 5 AND type != 1 ORDER BY CONCAT(lastname, ', ', firstname) ASC");
+        $users = $conn->query("SELECT *, CONCAT(lastname, ', ', firstname) as name FROM users WHERE type != 3 AND type != 5 AND type != 1 ORDER BY CONCAT(lastname, ', ', firstname) ASC");
     }
 }
 ?>
@@ -27,7 +27,7 @@ if(isset($_GET['pid'])){
                 while($row = $users->fetch_assoc()):
                     $selected = in_array($row['id'], $current_user_ids) ? 'selected' : '';
                     // Check if user is not a designer (type=4) or estimator (type=5)
-                    if($row['type'] != 4 && $row['type'] != 5):
+                    if($row['type'] != 3 && $row['type'] != 5):
                 ?>
                 <option value="<?php echo $row['id'] ?>" <?php echo $selected ?>><?php echo ucwords($row['name']) ?></option>
                 <?php 

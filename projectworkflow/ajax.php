@@ -304,6 +304,11 @@ if ($action == 'delete_progress_file') {
     if ($save)
         echo $save;
 } 
+if ($action == 'delete_file') {
+    $save = $crud->delete_file();
+    if ($save)
+        echo $save;
+} 
 
 if ($action == 'get_project_files') {
     $project_id = isset($_POST['project_id']) ? $_POST['project_id'] : 0;

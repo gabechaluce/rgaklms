@@ -86,7 +86,7 @@ include('db_connect.php'); // Ensure database connection
     </a>
 </li>
                 <!-- Inquiry section - Hidden for Designers (type = 4) -->
-<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 14 || ($_SESSION['login_type'] == 2 && $_SESSION['login_type'] != 4) || !in_array($_SESSION['login_type'], [3, 4, 7, 8, 13])) :?>
+<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 7 || ($_SESSION['login_type'] == 2 && $_SESSION['login_type'] != 4) || !in_array($_SESSION['login_type'], [3, 4, 8])) :?>
     <li class="nav-item">
         <a href="#" class="nav-link nav-inquiry_list">
             <i class="fas fa-tasks nav-icon">
@@ -116,7 +116,7 @@ include('db_connect.php'); // Ensure database connection
     </li>
 <?php endif; ?>
 
-<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 14 || !in_array($_SESSION['login_type'], [3,7,8,13])) : ?>
+<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 7 ||$_SESSION['login_type'] == 5 || !in_array($_SESSION['login_type'], [3,8])) : ?>
     <li class="nav-item">
         <a href="#" class="nav-link nav-edit_project nav-project_details">
             <i class="nav-icon fas fa-layer-group"></i>
@@ -124,7 +124,7 @@ include('db_connect.php'); // Ensure database connection
         
         </a>
         <ul class="nav nav-treeview">
-            <?php if ($_SESSION['login_type'] != 3): ?>
+            <?php if ($_SESSION['login_type'] != 7): ?>
                 <li class="nav-item">
                     <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
                         <i class="fas fa-angle-right nav-icon"></i>
@@ -144,7 +144,7 @@ include('db_connect.php'); // Ensure database connection
 <?php endif; ?>
 
 <!-- Task section - Hidden for Designers (type = 4) -->
-<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 14 || !in_array($_SESSION['login_type'], [2,3, 4, 7, 8, 13])) :?>
+<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 7 || !in_array($_SESSION['login_type'], [2,4, 8])) :?>
     <?// Show for Admins, Project Managers, and other applicable users but NOT for Designers ?>
     <li class="nav-item">
         <a href="./index.php?page=task_list" class="nav-link nav-task_list">
@@ -155,7 +155,7 @@ include('db_connect.php'); // Ensure database connection
 <?php endif; ?>
 
 <!-- Report section - Hidden for Designers (type = 4) -->
-<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 14 || !in_array($_SESSION['login_type'], [2,3, 4, 7, 8, 13])) :?>
+<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 7 || !in_array($_SESSION['login_type'], [2, 4, 8])) :?>
     <li class="nav-item">
         <a href="./index.php?page=reports" class="nav-link nav-reports">
             <i class="fas fa-th-list nav-icon"></i>
@@ -165,7 +165,7 @@ include('db_connect.php'); // Ensure database connection
 <?php endif; ?>
 
 <!-- Users (Admin Only) -->
-<?php if ($_SESSION['login_type'] == 1 ||$_SESSION['login_type'] == 13) :?>
+<?php if ($_SESSION['login_type'] == 1 ||$_SESSION['login_type'] == 10) :?>
     <li class="nav-item">
         <a href="#" class="nav-link nav-edit_user">
             <i class="nav-icon fas fa-users"></i>
@@ -190,7 +190,7 @@ include('db_connect.php'); // Ensure database connection
         </ul>
     </li>
     <?php endif; ?>
-    <?php if ($_SESSION['login_type'] == 1 ||$_SESSION['login_type'] == 13) :?>
+    <?php if ($_SESSION['login_type'] == 1 ||$_SESSION['login_type'] == 10) :?>
         <li class="nav-item">
         <a href="#" class="nav-link nav-edit_user">
                 <i class="nav-icon fa fa-map-pin"></i>
@@ -222,7 +222,7 @@ include('db_connect.php'); // Ensure database connection
         </li>
         <?php endif; ?>
   <!-- Files should be accessible to Project Managers and Designers -->
-<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 14 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 4 || !in_array($_SESSION['login_type'], [2,13])) :?>
+<?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 7 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 2 || !in_array($_SESSION['login_type'], [5])) :?>
     <li class="nav-item dropdown">
         <a href="./index.php?page=files" class="nav-link nav-files">
             <i class="nav-icon fas fa-folder"></i>

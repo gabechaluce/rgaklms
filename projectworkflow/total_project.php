@@ -5,7 +5,7 @@ include 'db_connect.php'; ?>
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-            <?php if ($_SESSION['login_type'] != 3): // Only admins and managers can add projects ?>
+            <?php if ($_SESSION['login_type'] != 9): // Only admins and managers can add projects ?>
                 <div class="card-tools">
 
                 </div>
@@ -36,7 +36,7 @@ include 'db_connect.php'; ?>
                     $i = 1;
                     $stat = array("Pending", "Started", "On-Progress", "On-Hold", "Over Due", "Done");
                     $where = "";
-                    if ($_SESSION['login_type'] == 2) {
+                    if ($_SESSION['login_type'] == 7) {
                         $where = " WHERE manager_id = '{$_SESSION['login_id']}' "; // Show projects for the manager
                     } elseif ($_SESSION['login_type'] == 3) {
                         $where = " WHERE CONCAT('[', REPLACE(user_ids, ',', '],['), ']') LIKE '%[{$_SESSION['login_id']}]%' "; // Show projects assigned to the employee

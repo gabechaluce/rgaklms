@@ -22,6 +22,7 @@
                             <label for="" class="control-label">User Role</label>
                             <select name="type" id="type" class="custom-select custom-select-sm">
         <option value="" disabled selected>Select Role</option>
+           <option value="10" <?php echo isset($type) && $type == 10 ? 'selected' : '' ?>>Admin</option>
         <option value="9" <?php echo isset($type) && $type == 9 ? 'selected' : '' ?>>Sales</option>
         <option value="8" <?php echo isset($type) && $type == 8 ? 'selected' : '' ?>>Purchasing</option>
         <option value="7" <?php echo isset($type) && $type == 7 ? 'selected' : '' ?>>Project Manager</option>

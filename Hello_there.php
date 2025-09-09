@@ -11,7 +11,7 @@ if (!isset($_SESSION['login_id'])) {
 }
 
 // NEW CODE: Redirect Project Managers directly to the project workflow
-if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 14 || $_SESSION['login_type'] == 13   || $_SESSION['login_type'] == 8 || $_SESSION['login_type'] == 6  || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 4 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 2) {
+if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2   || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 4  || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 6 || $_SESSION['login_type'] == 7 || $_SESSION['login_type'] == 8|| $_SESSION['login_type'] == 9|| $_SESSION['login_type'] == 10) {
     header("Location: ./projectworkflow/index.php");
     exit();
 }
@@ -223,7 +223,7 @@ if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 14 || $_SESSION
         // echo "User type: " . (isset($_SESSION['login_type']) ? $_SESSION['login_type'] : 'Not set');
         
         // Modified condition to be more inclusive or force display for testing
-        if(true || (isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], [1, 2, 3, 4, 8, 13, 14]))): 
+        if(true || (isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], [1,2,3,4,5,6,7,8,9,10]))): 
         ?>
             <a href="./projectworkflow/index.php" class="nav-button">
                 <i class="fas fa-tasks"></i>
@@ -235,7 +235,7 @@ if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 14 || $_SESSION
 
     <!-- Inventory Container -->
     <div class="button-container" style="margin: 5px;">
-        <?php if(isset($_SESSION['login_type']) && ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2 || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 6)): ?>
+        <?php if(isset($_SESSION['login_type']) && ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 4 || $_SESSION['login_type'] == 5  || $_SESSION['login_type'] == 6 || $_SESSION['login_type'] == 7 || $_SESSION['login_type'] == 8 || $_SESSION['login_type'] == 9 || $_SESSION['login_type'] == 10)): ?>
             <a href="./imsystem/admin/home.php" class="nav-button">
                 <i class="fas fa-box-open"></i>
                 Inventory and Equipment

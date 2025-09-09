@@ -43,15 +43,19 @@
         // Admin sees all projects
         $where = "";
     } elseif ($_SESSION['login_type'] == 2) {
-        // Coordinator sees projects where they're in user_ids
+        // Coordinator sees projects where they're in coordinator_ids
         $user_id = $conn->real_escape_string($_SESSION['login_id']);
         $where = " WHERE (
+            FIND_IN_SET('$user_id', coordinator_ids) > 0 OR 
+            coordinator_ids LIKE '$user_id,%' OR 
+            coordinator_ids LIKE '%,$user_id' OR 
+            coordinator_ids = '$user_id' OR
             FIND_IN_SET('$user_id', user_ids) > 0 OR 
             user_ids LIKE '$user_id,%' OR 
             user_ids LIKE '%,$user_id' OR 
             user_ids = '$user_id'
         )";
-    } elseif ($_SESSION['login_type'] == 14) {
+    } elseif ($_SESSION['login_type'] == 7) {
         // Manager sees projects where they're in manager_id or user_ids
         $user_id = $conn->real_escape_string($_SESSION['login_id']);
         $where = " WHERE (
@@ -65,7 +69,46 @@
             user_ids = '$user_id'
         )";
     } elseif ($_SESSION['login_type'] == 3) {
-        // Employee sees projects where they're in user_ids
+        // Designer sees projects where they're in designer_ids
+        $user_id = $conn->real_escape_string($_SESSION['login_id']);
+        $where = " WHERE (
+            FIND_IN_SET('$user_id', designer_ids) > 0 OR 
+            designer_ids LIKE '$user_id,%' OR 
+            designer_ids LIKE '%,$user_id' OR 
+            designer_ids = '$user_id' OR
+            FIND_IN_SET('$user_id', user_ids) > 0 OR 
+            user_ids LIKE '$user_id,%' OR 
+            user_ids LIKE '%,$user_id' OR 
+            user_ids = '$user_id'
+        )";
+    } elseif ($_SESSION['login_type'] == 4) {
+        // Inventory Coordinator sees projects where they're in inventory_ids
+        $user_id = $conn->real_escape_string($_SESSION['login_id']);
+        $where = " WHERE (
+            FIND_IN_SET('$user_id', inventory_ids) > 0 OR 
+            inventory_ids LIKE '$user_id,%' OR 
+            inventory_ids LIKE '%,$user_id' OR 
+            inventory_ids = '$user_id' OR
+            FIND_IN_SET('$user_id', user_ids) > 0 OR 
+            user_ids LIKE '$user_id,%' OR 
+            user_ids LIKE '%,$user_id' OR 
+            user_ids = '$user_id'
+        )";
+    } elseif ($_SESSION['login_type'] == 5) {
+        // Estimator sees projects where they're in estimator_ids
+        $user_id = $conn->real_escape_string($_SESSION['login_id']);
+        $where = " WHERE (
+            FIND_IN_SET('$user_id', estimator_ids) > 0 OR 
+            estimator_ids LIKE '$user_id,%' OR 
+            estimator_ids LIKE '%,$user_id' OR 
+            estimator_ids = '$user_id' OR
+            FIND_IN_SET('$user_id', user_ids) > 0 OR 
+            user_ids LIKE '$user_id,%' OR 
+            user_ids LIKE '%,$user_id' OR 
+            user_ids = '$user_id'
+        )";
+    } elseif ($_SESSION['login_type'] == 9) {
+        // Sales sees projects where they're in user_ids
         $user_id = $conn->real_escape_string($_SESSION['login_id']);
         $where = " WHERE (
             FIND_IN_SET('$user_id', user_ids) > 0 OR 
@@ -78,7 +121,8 @@
                         $qry = $conn->query("SELECT * FROM project_list $where ORDER BY date_created DESC, name ASC");
 
                         // Add debug output (remove in production)
-                        // echo "<!-- SQL Query: SELECT * FROM project_list $where ORDER BY date_created DESC, name ASC -->";
+                        echo "<!-- SQL Query: SELECT * FROM project_list $where ORDER BY date_created DESC, name ASC -->";
+                        echo "<!-- User ID: {$_SESSION['login_id']}, User Type: {$_SESSION['login_type']} -->";
 
                         while ($row = $qry->fetch_assoc()):
                             // Improved description cleaning
@@ -131,7 +175,7 @@
         <div class="dropdown-menu">
             <a class="dropdown-item project_details" href="./index.php?page=project_details&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">View</a>
             <div class="dropdown-divider"></div>
-            <?php if (in_array($_SESSION['login_type'], [1, 2, 14])): // Only Admin, Coordinator, and Manager ?>
+            <?php if (in_array($_SESSION['login_type'], [1, 2, 7, 3])): // Only Admin, Coordinator, and Manager ?>
                 <a class="dropdown-item" href="./index.php?page=edit_project&id=<?php echo $row['id'] ?>">Edit</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

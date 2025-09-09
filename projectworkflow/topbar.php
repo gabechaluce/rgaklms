@@ -32,7 +32,7 @@
 // Check if user has permission to access Inventory (Admin = 1, Project Supervisor = 6, Inventory Coordinator = 4, Project Manager = 2)
 // AND we're not currently in the inventory section
 if(isset($_SESSION['login_type']) && 
-   ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 6 || $_SESSION['login_type'] == 4 || $_SESSION['login_type'] == 2|| $_SESSION['login_type'] == 5) && 
+   ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2 || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 4|| $_SESSION['login_type'] == 5|| $_SESSION['login_type'] == 6 || $_SESSION['login_type'] == 7|| $_SESSION['login_type'] == 9|| $_SESSION['login_type'] == 10) && 
    !($current_dir == 'admin' || $current_dir == 'libsystem')): 
 ?>
 <li class="nav-item">

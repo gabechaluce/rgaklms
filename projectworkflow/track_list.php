@@ -5,7 +5,7 @@
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
             <h3 class="card-title">Track List</h3>
-            <?php if ($_SESSION['login_type'] != 3): ?>
+            <?php if ($_SESSION['login_type'] != 9): ?>
                 <div class="card-tools">
                     <a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_track">
                         <i class="fa fa-plus"></i> Add New Track
@@ -69,7 +69,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item view_track" href="./index.php?page=view_track&id=<?php echo $row['id'] ?>">View</a>
                                         <div class="dropdown-divider"></div>
-                                        <?php if ($_SESSION['login_type'] != 3): ?>
+                                        <?php if ($_SESSION['login_type'] != 9): ?>
                                             <a class="dropdown-item" href="./index.php?page=edit_track&id=<?php echo $row['id'] ?>">Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item delete_track" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

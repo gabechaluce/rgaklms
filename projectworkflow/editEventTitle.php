@@ -10,7 +10,7 @@ function logError($message) {
 }
 
 
-$allowed_roles = [1, 2, 3, 4, 5, 6, 7, 8, 13]; // Admin, PM, Inventory Coord, Project Coord, Production Sup
+$allowed_roles = [1, 2, 3, 4, 5, 6, 7, 10]; // Admin, PM, Inventory Coord, Project Coord, Production Sup
 if (!isset($_SESSION['login_type']) || !in_array($_SESSION['login_type'], $allowed_roles)) {
     logError("Unauthorized access by user type: " . $_SESSION['login_type']);
     echo json_encode(["status" => "error", "message" => "Unauthorized access"]);

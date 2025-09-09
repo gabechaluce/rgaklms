@@ -5,7 +5,7 @@ include 'db_connect.php'; ?>
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-            <?php if ($_SESSION['login_type'] != 3): // Only admins and managers can add projects ?>
+            <?php if ($_SESSION['login_type'] != 9): // Only admins and managers can add projects ?>
                 <div class="card-tools">
 
                 </div>
@@ -38,10 +38,10 @@ include 'db_connect.php'; ?>
                     $where = "";
                     if ($_SESSION['login_type'] == 2) {
                         $where = " WHERE manager_id = '{$_SESSION['login_id']}' "; // Show projects for the manager
-                    } elseif ($_SESSION['login_type'] == 3) {
+                    } elseif ($_SESSION['login_type'] == 7) {
                         $where = " WHERE CONCAT('[', REPLACE(user_ids, ',', '],['), ']') LIKE '%[{$_SESSION['login_id']}]%' "; // Show projects assigned to the employee
                     }
-                    $qry = $conn->query("SELECT * FROM project_list WHERE status = 5 ORDER BY date_created DESC, name ASC");
+                    $qry = $conn->query("SELECT * FROM project_list WHERE status = 3 ORDER BY date_created DESC, name ASC");
 
 
                     while ($row = $qry->fetch_assoc()):
@@ -100,7 +100,7 @@ include 'db_connect.php'; ?>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item project_details" href="./index.php?page=project_details&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">View</a>
                                     <div class="dropdown-divider"></div>
-                                    <?php if ($_SESSION['login_type'] != 3): // Only admins and managers can edit and delete ?>
+                                    <?php if ($_SESSION['login_type'] != 2): // Only admins and managers can edit and delete ?>
                                         <a class="dropdown-item" href="./index.php?page=edit_project&id=<?php echo $row['id'] ?>">Edit</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

@@ -13,7 +13,7 @@ if (isset($_GET['filter']) && $_GET['filter'] == 'pending') {
 <div class="col-lg-12">
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <?php if ($_SESSION['login_type'] != 2): ?>
+            <?php if ($_SESSION['login_type'] != 8): ?>
                 <div class="card-tools">
                     <a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_inquiry">
                         <i class="fa fa-plus"></i> Add New Inquiry
@@ -67,7 +67,7 @@ if (isset($_GET['filter']) && $_GET['filter'] == 'pending') {
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item view_inquiry" href="./index.php?page=view_inquiry&id=<?php echo $row['id'] ?>">View</a>
                                         <div class="dropdown-divider"></div>
-                                        <?php if ($_SESSION['login_type'] != 3): ?>
+                                        <?php if ($_SESSION['login_type'] != 8): ?>
                                             <a class="dropdown-item" href="./index.php?page=edit_inquiry&id=<?php echo $row['id'] ?>">Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item delete_inquiry" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

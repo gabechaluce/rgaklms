@@ -86,7 +86,7 @@
 							<select class="form-control form-control-sm select2" multiple="multiple" name="manager_id[]" REQUIRED>
 								<option></option>
 								<?php 
-								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 14 order by concat(firstname,' ',lastname) asc ");
+								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 7 order by concat(firstname,' ',lastname) asc ");
 								while($row= $employees->fetch_assoc()):
 								?>
 								<option value="<?php echo $row['id'] ?>" <?php echo isset($manager_id) && in_array($row['id'],explode(',',$manager_id)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -98,13 +98,13 @@
 						<div class="form-group">
 							<?php 
 							$user_type = isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '';
-							$required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
 							?>
 							<label for="" class="control-label">Project Team Members</label>
 							<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" <?php echo $required_attr; ?>>
 								<option></option>
 								<?php 
-								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
+								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 9 order by concat(firstname,' ',lastname) asc ");
 								while($row= $employees->fetch_assoc()):
 								?>
 								<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -118,7 +118,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
 							?>
 							<label for="" class="control-label">Project Coordinator</label>
 							<select class="form-control form-control-sm select2" multiple="multiple" name="coordinator_ids[]" <?php echo $required_attr; ?>>
@@ -135,13 +135,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
 							?>
 							<label for="" class="control-label">Designer</label>
 							<select class="form-control form-control-sm select2" multiple="multiple" name="designer_ids[]" <?php echo $required_attr; ?>>
 								<option></option>
 								<?php 
-								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 4 order by concat(firstname,' ',lastname) asc ");
+								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
 								while($row= $employees->fetch_assoc()):
 								?>
 								<option value="<?php echo $row['id'] ?>" <?php echo isset($designer_ids) && in_array($row['id'],explode(',',$designer_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -155,13 +155,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
 							?>
 							<label for="" class="control-label">Project Estimator</label>
 							<select class="form-control form-control-sm select2" multiple="multiple" name="estimator_ids[]" <?php echo $required_attr; ?>>
 								<option></option>
 								<?php 
-								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 6 order by concat(firstname,' ',lastname) asc ");
+								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
 								while($row= $employees->fetch_assoc()):
 								?>
 								<option value="<?php echo $row['id'] ?>" <?php echo isset($estimator_ids) && in_array($row['id'],explode(',',$estimator_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -172,13 +172,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<?php 
-							$required_attr = ($user_type == 5 || $user_type == 14) ? '' : 'REQUIRED';
+							$required_attr = ($user_type == 4 || $user_type == 7) ? '' : 'REQUIRED';
 							?>
 							<label for="" class="control-label">Inventory Coordinator</label>
 							<select class="form-control form-control-sm select2" multiple="multiple" name="inventory_ids[]" <?php echo $required_attr; ?>>
 								<option></option>
 								<?php 
-								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 5 order by concat(firstname,' ',lastname) asc ");
+								$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 4 order by concat(firstname,' ',lastname) asc ");
 								while($row= $employees->fetch_assoc()):
 								?>
 								<option value="<?php echo $row['id'] ?>" <?php echo isset($inventory_ids) && in_array($row['id'],explode(',',$inventory_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>

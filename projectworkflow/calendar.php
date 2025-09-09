@@ -9,13 +9,13 @@ function isAdmin() {
 
 // Function to check if user can edit urgent meetings
 function canEditUrgentMeeting() {
-    $allowed_roles = [1, 2, 4, 6, 8, 13, 14];
+    $allowed_roles = [1, 2, 3, 5, 6, 7, 10];
     return isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], $allowed_roles);
 }
 
 // Function to check if user can add events
 function canAddEvents() {
-    $allowed_roles = [1, 2, 4, 6, 8, 13, 14]; // Adjust these role IDs as needed
+    $allowed_roles = [1, 2, 3, 5, 6, 7, 10]; // Adjust these role IDs as needed
     return isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], $allowed_roles);
 }
 

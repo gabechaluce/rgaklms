@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 
 // Authorization check
-$allowed_roles = [1, 2, 4, 6, 8, 13, 14];
+$allowed_roles = [1, 2, 3, 5, 6, 7, 10];
 if (!isset($_SESSION['login_type']) || !in_array($_SESSION['login_type'], $allowed_roles)) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
     exit;

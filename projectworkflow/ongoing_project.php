@@ -5,7 +5,7 @@ include 'db_connect.php'; ?>
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-            <?php if ($_SESSION['login_type'] != 3): // Only admins and managers can add projects ?>
+            <?php if ($_SESSION['login_type'] != 9): // Only admins and managers can add projects ?>
                 <div class="card-tools">
 
                 </div>
@@ -100,7 +100,7 @@ include 'db_connect.php'; ?>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item project_details" href="./index.php?page=project_details&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">View</a>
                                     <div class="dropdown-divider"></div>
-                                    <?php if ($_SESSION['login_type'] != 3): // Only admins and managers can edit and delete ?>
+                                    <?php if ($_SESSION['login_type'] != 9): // Only admins and managers can edit and delete ?>
                                         <a class="dropdown-item" href="./index.php?page=edit_project&id=<?php echo $row['id'] ?>">Edit</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

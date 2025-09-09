@@ -30,7 +30,20 @@
                     <tbody>
                         <?php
                         $i = 1;
-                        $type = array('','Executive','Project Coordinator/Admin','Employee','Designer','Inventory Coordinator','Estimator','Accounting','Production Supervisor','Fabricator','CNC Operator','Painter','Electrician','Human Resource','Project Manager');
+                        // Updated type array to match the new user roles from the form
+                        $type = array(
+                            '',
+                            'General Manager',         // type 1
+                            'Project Coordinator',     // type 2
+                            'Designer',               // type 3
+                            'Inventory Coordinator',  // type 4
+                            'Estimator',              // type 5
+                            'Accounting',             // type 6
+                            'Project Manager',        // type 7
+                            'Purchasing',             // type 8
+                            'Sales',                  // type 9
+                            'Admin'                   // type 10
+                        );
                         // Modified query to exclude users with "not yet" in firstname
                         $qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users WHERE firstname NOT LIKE 'not yet%' order by concat(firstname,' ',lastname) asc");
                         while($row= $qry->fetch_assoc()):
@@ -39,7 +52,7 @@
                             <th class="text-center"><?php echo $i++ ?></th>
                             <td><b><?php echo ucwords($row['name']) ?></b></td>
                             <td><b><?php echo $row['email'] ?></b></td>
-                            <td><b><?php echo $type[$row['type']] ?></b></td>
+                            <td><b><?php echo isset($type[$row['type']]) ? $type[$row['type']] : 'Unknown Role' ?></b></td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-default btn-sm btn-flat border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 Action

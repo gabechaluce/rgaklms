@@ -8,7 +8,7 @@ if (!function_exists('isAdmin')) {
 // Add new permission check functions
 if (!function_exists('canEditUrgentMeetings')) {
     function canEditUrgentMeetings() {
-        return isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], [1, 2, 4, 6, 8, 13, 14]);
+        return isset($_SESSION['login_type']) && in_array($_SESSION['login_type'], [1, 2, 3, 5, 7, 10]);
     }
 }
 if (!function_exists('canAddEvents')) {
@@ -87,20 +87,16 @@ if (canEditUrgentMeetings()):
                                 $users = $conn->query("SELECT id, CONCAT(firstname, ' ', lastname) as name, type FROM users ORDER BY firstname, lastname");
                                 while($row = $users->fetch_assoc()):
                                     $position_names = [
-                                        1 => 'Executive',
-                                        2 => 'Project Coordinator/Admin',
-                                        3 => 'Employee',
-                                        4 => 'Designer',
-                                        5 => 'Inventory Coordinator',
-                                        6 => 'Estimator',
-                                        7 => 'Accounting',
-                                        8 => 'Production Supervisor',
-                                        9 => 'Fabricator',
-                                        10 => 'CNC Operator',
-                                        11 => 'Painter',
-                                        12 => 'Electrician',
-                                        13 => 'Human Resource',
-                                        14 => 'Project Manager',
+                                        1 => 'General Manager',
+                                        2 => 'Project Coordinator',
+                                        3 => 'Designer',
+                                        4 => 'Inventory Coordinator',
+                                        5 => 'Estimator',
+                                        6 => 'Accounting',
+                                        7 => 'Project Manager',
+                                        8 => 'Purchasing',
+                                        9 => 'Sales',
+                                        10 => 'Admin'
                                     ];
                                     $position_name = isset($position_names[$row['type']]) ? $position_names[$row['type']] : 'Staff';
                                 ?>
@@ -120,20 +116,16 @@ if (canEditUrgentMeetings()):
                             <div class="position-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
                                 <?php
                                 $positions = [
-                                    1 => 'Executive',
-                                    2 => 'Project Coordinator/Admin',
-                                    3 => 'Employee',
-                                    4 => 'Designer',
-                                    5 => 'Inventory Coordinator',
-                                    6 => 'Estimator',
-                                    7 => 'Accounting',
-                                    8 => 'Production Supervisor',
-                                    9 => 'Fabricator',
-                                    10 => 'CNC Operator',
-                                    11 => 'Painter',
-                                    12 => 'Electrician',
-                                    13 => 'Human Resource',
-                                    14 => 'Project Manager'
+                                    1 => 'General Manager',
+                                    2 => 'Project Coordinator',
+                                    3 => 'Designer',
+                                    4 => 'Inventory Coordinator',
+                                    5 => 'Estimator',
+                                    6 => 'Accounting',
+                                    7 => 'Project Manager',
+                                    8 => 'Purchasing',
+                                    9 => 'Sales',
+                                    10 => 'Admin'
                                 ];
                                 foreach ($positions as $id => $name): ?>
                                 <div class="form-check">
@@ -217,20 +209,16 @@ if (canEditUrgentMeetings()):
                                 $users = $conn->query("SELECT id, CONCAT(firstname, ' ', lastname) as name, type FROM users ORDER BY firstname, lastname");
                                 while($row = $users->fetch_assoc()):
                                     $position_names = [
-                                        1 => 'Executive',
-                                        2 => 'Project Coordinator/Admin',
-                                        3 => 'Employee',
-                                        4 => 'Designer',
-                                        5 => 'Inventory Coordinator',
-                                        6 => 'Estimator',
-                                        7 => 'Accounting',
-                                        8 => 'Production Supervisor',
-                                        9 => 'Fabricator',
-                                        10 => 'CNC Operator',
-                                        11 => 'Painter',
-                                        12 => 'Electrician',
-                                        13 => 'Human Resource',
-                                        14 => 'Project Manager',
+                                        1 => 'General Manager',
+                                        2 => 'Project Coordinator',
+                                        3 => 'Designer',
+                                        4 => 'Inventory Coordinator',
+                                        5 => 'Estimator',
+                                        6 => 'Accounting',
+                                        7 => 'Project Manager',
+                                        8 => 'Purchasing',
+                                        9 => 'Sales',
+                                        10 => 'Admin'
                                     ];
                                     $position_name = isset($position_names[$row['type']]) ? $position_names[$row['type']] : 'Staff';
                                 ?>
@@ -513,6 +501,15 @@ input[type="date"]:focus {
         line-height: 1.4;
     }
 }
+
+
+body, .wrapper, .content-wrapper {
+    background-color:#f4f1ed !important;
+}
+
+
+
+
 </style>
 
 <script>

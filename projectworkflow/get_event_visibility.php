@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 
 // Configuration
-$allowed_roles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+$allowed_roles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Authorization check
 if (!isset($_SESSION['login_type']) || !in_array($_SESSION['login_type'], $allowed_roles)) {
