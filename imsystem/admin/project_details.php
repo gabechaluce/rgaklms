@@ -487,7 +487,7 @@ if ($materials_result && $materials_result->num_rows > 0) {
             <div class="box-header with-border">
               <h3 class="box-title">Overhead Costs</h3>
               <div class="pull-right">
-                <?php if($user['type'] != 5): ?>
+                <?php if($user['type'] != 5 && $user['type'] != 9): ?>
                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addOverheadModal">
                   <i class="fa fa-plus"></i> Add Cost
                 </button>
