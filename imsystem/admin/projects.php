@@ -79,15 +79,19 @@
                                         // Admin sees all projects
                                         $where = "";
                                     } elseif ($_SESSION['login_type'] == 2) {
-                                        // Coordinator sees projects where they're in user_ids
+                                        // Coordinator sees projects where they're in coordinator_ids
                                         $user_id = $conn->real_escape_string($_SESSION['login_id']);
                                         $where = " WHERE (
+                                            FIND_IN_SET('$user_id', coordinator_ids) > 0 OR 
+                                            coordinator_ids LIKE '$user_id,%' OR 
+                                            coordinator_ids LIKE '%,$user_id' OR 
+                                            coordinator_ids = '$user_id' OR
                                             FIND_IN_SET('$user_id', user_ids) > 0 OR 
                                             user_ids LIKE '$user_id,%' OR 
                                             user_ids LIKE '%,$user_id' OR 
                                             user_ids = '$user_id'
                                         )";
-                                    } elseif ($_SESSION['login_type'] == 14) {
+                                    } elseif ($_SESSION['login_type'] == 7) {
                                         // Manager sees projects where they're in manager_id or user_ids
                                         $user_id = $conn->real_escape_string($_SESSION['login_id']);
                                         $where = " WHERE (
@@ -101,9 +105,13 @@
                                             user_ids = '$user_id'
                                         )";
                                     } elseif ($_SESSION['login_type'] == 3) {
-                                        // Employee sees projects where they're in user_ids
+                                        // Designer sees projects where they're in designer_ids
                                         $user_id = $conn->real_escape_string($_SESSION['login_id']);
                                         $where = " WHERE (
+                                            FIND_IN_SET('$user_id', designer_ids) > 0 OR 
+                                            designer_ids LIKE '$user_id,%' OR 
+                                            designer_ids LIKE '%,$user_id' OR 
+                                            designer_ids = '$user_id' OR
                                             FIND_IN_SET('$user_id', user_ids) > 0 OR 
                                             user_ids LIKE '$user_id,%' OR 
                                             user_ids LIKE '%,$user_id' OR 
