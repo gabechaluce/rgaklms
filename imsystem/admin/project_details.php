@@ -224,11 +224,7 @@ if ($materials_result && $materials_result->num_rows > 0) {
   <div class="content-wrapper">
     <section class="content-header">
       <h1>Project Details</h1>
-      <ol class="breadcrumb">
-        <li><a href="home.php"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="projects.php">Projects</a></li>
-        <li class="active">Project Details</li>
-      </ol>
+     
     </section>
 
     <section class="content">
@@ -487,11 +483,9 @@ if ($materials_result && $materials_result->num_rows > 0) {
             <div class="box-header with-border">
               <h3 class="box-title">Overhead Costs</h3>
               <div class="pull-right">
-                <?php if($user['type'] != 5 && $user['type'] != 9): ?>
                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addOverheadModal">
                   <i class="fa fa-plus"></i> Add Cost
                 </button>
-                <?php endif; ?>
               </div>
             </div>
             <div class="box-body">
