@@ -16,19 +16,20 @@
       <li><a href="home.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Dashboard</span></a></li>
       
       <!-- Hide from Accounting (role 6) -->
-      <?php if($user['type'] != 6 && $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 6 && $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2 ): ?>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
       <?php endif; ?>
-      
+      <?php if(  $user['type'] != 8): ?>
       <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
-      <?php if( $user['type'] != 5  && $user['type'] != 3 ): ?>
+      <?php endif; ?>
+      <?php if( $user['type'] != 5  && $user['type'] != 3  && $user['type'] != 8): ?>
       <li><a href="payment_status.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects Payment</span></a></li>
       <?php endif; ?>
           <?php if($user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Supplier</span></a></li>
       <?php endif; ?>
       <!-- Hide from Accounting (role 6) -->
-      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2  && $user['type'] != 8): ?>
       <li><a href="product_unit.php"><i class="fas fa-balance-scale nav-icon"></i> <span>&nbsp;Add New Unit</span></a></li>
       <li><a href="product_category.php"><i class="fas fa-list nav-icon"></i> <span>&nbsp;Inventory Category</span></a></li>
       <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Add New Material</span></a></li>
@@ -40,12 +41,12 @@
       <?php if($user['type'] != 7&& $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="sales_master.php">&nbsp;<i class="fas fa-peso-sign nav-icon"></i> <span>&nbsp;Withdrawal </span></a></li>
       <?php endif; ?>
-      <?php if($user['type'] != 9 && $user['type'] != 7&& $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 9 && $user['type'] != 7&& $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2 ): ?>
       <li><a href="view_stock.php"><i class="fa-brands fa-stack-overflow nav-icon"></i> <span>&nbsp;Material Stock</span></a></li>
       <?php endif; ?>
       
       <!-- Hide from Accounting (role 6) -->
-      <?php if($user['type'] != 6&& $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 6&& $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 2  && $user['type'] != 8): ?>
       <li><a href="shapeVisual.php"><i class="fas fa-chart-pie nav-icon"></i> <span>&nbsp;Shape Visualization</span></a></li>
       <?php endif; ?>
       <?php if( $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 3 && $user['type'] != 2): ?>
@@ -68,7 +69,7 @@
       </li>
       <?php endif; ?>
       <!-- Hide entire CAR TRACK section from Accounting (role 6) -->
-      <?php if($user['type'] != 6&& $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 6  && $user['type'] != 8&& $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li class="header">CAR TRACK</li>
       <li class="treeview" id="cartrack-treeview">
         <a href="javascript:void(0);">
@@ -84,7 +85,7 @@
       <?php endif; ?>
       
       <!-- Hide entire EQUIPMENT section from Accounting (role 6) -->
-      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
+      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2  && $user['type'] != 8): ?>
       <li class="header">EQUIPMENT</li>
       <li><a href="equipmentDashboard.php"><i class="fas fa-tools nav-icon"></i> <span>Equipment Dashboard</span></a></li>
 

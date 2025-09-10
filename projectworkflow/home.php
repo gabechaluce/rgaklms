@@ -17,7 +17,7 @@ if ($_SESSION['login_type'] == 1) { // General Manager - no filter
     $where = " WHERE FIND_IN_SET('$user_id', manager_id) > 0 OR FIND_IN_SET('$user_id', user_ids) > 0 OR FIND_IN_SET('$user_id', coordinator_ids) > 0 ";
 } elseif ($_SESSION['login_type'] == 7) { // Project Manager
     $where = " WHERE FIND_IN_SET('$user_id', manager_id) > 0 OR FIND_IN_SET('$user_id', user_ids) > 0 ";
-} elseif (in_array($_SESSION['login_type'], [3, 4, 5, 6, 8, 9])) { // Team Members
+} elseif (in_array($_SESSION['login_type'], [3, 4, 5, 6,  9])) { // Team Members
     // Check all relevant fields for each role type
     $role_specific_conditions = [];
     
