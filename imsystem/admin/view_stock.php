@@ -10,7 +10,6 @@
   <div class="content-wrapper">
     <section class="content-header">
       <h1>Current Stock</h1>
-    
     </section>
 
     <section class="content">
@@ -19,12 +18,56 @@
           <div class="box floating-box">
             <div class="box-header with-border">
               <h3 class="box-title">Inventory Status</h3>
-              <?php
-                $category = isset($_GET['category']) ? $_GET['category'] : '';
-                if(!empty($category)) {
-                  echo '<span class="pull-right">Filtered by: <strong>'.$category.'</strong> <a href="view_stock.php" class="btn btn-xs btn-default"><i class="fa fa-times"></i> Clear</a></span>';
-                }
-              ?>
+              
+              <!-- Filter Form -->
+              <div class="pull-right">
+                <form method="GET" class="form-inline" style="display: inline-block;">
+                  <div class="form-group" style="margin-right: 10px;">
+                    <label for="inventory_selection" style="margin-right: 5px;">Inventory:</label>
+                    <select name="inventory_selection" id="inventory_selection" class="form-control input-sm" onchange="this.form.submit()">
+                      <option value="">All Inventories</option>
+                      <?php
+                        $inventory_sql = "SELECT DISTINCT inventory_selection FROM inventory_selection ORDER BY inventory_selection";
+                        $inventory_query = $conn->query($inventory_sql);
+                        $selected_inventory = isset($_GET['inventory_selection']) ? $_GET['inventory_selection'] : '';
+                        
+                        while($inv_row = $inventory_query->fetch_assoc()) {
+                          $selected = ($selected_inventory == $inv_row['inventory_selection']) ? 'selected' : '';
+                          echo "<option value='".$inv_row['inventory_selection']."' $selected>".$inv_row['inventory_selection']."</option>";
+                        }
+                      ?>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group" style="margin-right: 10px;">
+                    <label for="category" style="margin-right: 5px;">Category:</label>
+                    <select name="category" id="category" class="form-control input-sm" onchange="this.form.submit()">
+                      <option value="">All Categories</option>
+                      <?php
+                        $category_where = "";
+                        if(!empty($selected_inventory)) {
+                          $category_where = "WHERE inventory_selection = '$selected_inventory'";
+                        }
+                        
+                        $category_sql = "SELECT DISTINCT product_company FROM stock_master $category_where ORDER BY product_company";
+                        $category_query = $conn->query($category_sql);
+                        $selected_category = isset($_GET['category']) ? $_GET['category'] : '';
+                        
+                        while($cat_row = $category_query->fetch_assoc()) {
+                          $selected = ($selected_category == $cat_row['product_company']) ? 'selected' : '';
+                          echo "<option value='".$cat_row['product_company']."' $selected>".$cat_row['product_company']."</option>";
+                        }
+                      ?>
+                    </select>
+                  </div>
+                  
+                  <?php if(!empty($selected_inventory) || !empty($selected_category)): ?>
+                    <a href="view_stock.php" class="btn btn-xs btn-default">
+                      <i class="fa fa-times"></i> Clear
+                    </a>
+                  <?php endif; ?>
+                </form>
+              </div>
             </div>
             <div class="box-body">
               <div class="table-responsive">
@@ -36,19 +79,33 @@
                       <th>Product</th>
                       <th>Unit</th>
                       <th>Specification</th>
-                      <th>Price</th>
+                      <?php if( $user['type'] != 3  ): ?>
+                        <th>Price</th>
+                      <?php endif; ?>
                       <th>Available Quantity</th>
                       <th>Stock Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                      $where = "";
-                      if(!empty($category)) {
-                        $where = "WHERE product_company = '$category'";
+                      $where_conditions = [];
+                      
+                      // Add inventory selection filter
+                      if(!empty($selected_inventory)) {
+                        $where_conditions[] = "inventory_selection = '$selected_inventory'";
                       }
                       
-                      $sql = "SELECT * FROM stock_master $where ORDER BY product_company, product_name";
+                      // Add category filter
+                      if(!empty($selected_category)) {
+                        $where_conditions[] = "product_company = '$selected_category'";
+                      }
+                      
+                      $where_clause = "";
+                      if(!empty($where_conditions)) {
+                        $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+                      }
+                      
+                      $sql = "SELECT * FROM stock_master $where_clause ORDER BY product_company, product_name";
                       $query = $conn->query($sql);
                       
                       while($row = $query->fetch_assoc()) {
@@ -63,18 +120,21 @@
                           $status = '<span class="label label-success">In Stock</span>';
                         }
                         
-                        echo "
-                          <tr>
-                            <td>".$row['product_company']."</td>
-                            <td>".$row['inventory_selection']."</td>
-                            <td>".$row['product_name']."</td>
-                            <td>".$row['product_unit']."</td>
-                            <td>".($row['specification'] ?? 'N/A')."</td>
-                            <td>".number_format($row['product_selling_price'], 2)."</td>
-                            <td>".$quantity."</td>
-                            <td>".$status."</td>
-                          </tr>
-                        ";
+                        echo "<tr>";
+                        echo "<td>".$row['product_company']."</td>";
+                        echo "<td>".$row['inventory_selection']."</td>";
+                        echo "<td>".$row['product_name']."</td>";
+                        echo "<td>".$row['product_unit']."</td>";
+                        echo "<td>".($row['specification'] ?? 'N/A')."</td>";
+                        
+                        // Only show price if user is not a designer
+                        if($user['type'] != 3) {
+                          echo "<td>".number_format($row['product_selling_price'], 2)."</td>";
+                        }
+                        
+                        echo "<td>".$quantity."</td>";
+                        echo "<td>".$status."</td>";
+                        echo "</tr>";
                       }
                     ?>
                   </tbody>
@@ -146,6 +206,16 @@ $(function(){
 .table tbody tr:hover {
   background-color: #f5f5f5;
   cursor: pointer;
+}
+
+/* Filter Form Styling */
+.form-inline .form-group {
+  vertical-align: middle;
+}
+
+.form-inline label {
+  font-weight: normal;
+  color: #666;
 }
 </style>
 </body>
