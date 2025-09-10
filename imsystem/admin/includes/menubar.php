@@ -14,18 +14,41 @@
       
       <li class="header">INVENTORY</li>
       <li><a href="home.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Dashboard</span></a></li>
+      
+      <!-- Hide from Accounting (role 6) -->
+      <?php if($user['type'] != 6 && $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
-    <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
-        <li><a href="payment_status.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects Payment</span></a></li>
+      <?php endif; ?>
+      
+      <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
+      <?php if( $user['type'] != 5  && $user['type'] != 3 ): ?>
+      <li><a href="payment_status.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects Payment</span></a></li>
+      <?php endif; ?>
+          <?php if($user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="supplier_add.php"><i class="fas fa-store nav-icon"></i> <span>&nbsp;Supplier</span></a></li>
+      <?php endif; ?>
+      <!-- Hide from Accounting (role 6) -->
+      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="product_unit.php"><i class="fas fa-balance-scale nav-icon"></i> <span>&nbsp;Add New Unit</span></a></li>
       <li><a href="product_category.php"><i class="fas fa-list nav-icon"></i> <span>&nbsp;Inventory Category</span></a></li>
       <li><a href="product_add.php"><i class="fas fa-briefcase nav-icon"></i> <span>&nbsp;Add New Material</span></a></li>
       <li><a href="specification.php"><i class="fas fa-list-alt nav-icon"></i> <span>&nbsp;Material Specifications</span></a></li>
+      <?php endif; ?>
+        <?php if($user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="purchase_master.php"><i class="fas fa-cart-shopping nav-icon"></i> <span>Purchases </span></a></li>
+      <?php endif; ?>
+      <?php if($user['type'] != 7&& $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li><a href="sales_master.php">&nbsp;<i class="fas fa-peso-sign nav-icon"></i> <span>&nbsp;Withdrawal </span></a></li>
-      <li><a href="view_stock.php"><i class="fa-brands fa-stack-overflow nav-icon"></i> <span>&nbsp;Product Stock</span></a></li>
+      <?php endif; ?>
+      <?php if($user['type'] != 9 && $user['type'] != 7&& $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
+      <li><a href="view_stock.php"><i class="fa-brands fa-stack-overflow nav-icon"></i> <span>&nbsp;Material Stock</span></a></li>
+      <?php endif; ?>
+      
+      <!-- Hide from Accounting (role 6) -->
+      <?php if($user['type'] != 6&& $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 2): ?>
       <li><a href="shapeVisual.php"><i class="fas fa-chart-pie nav-icon"></i> <span>&nbsp;Shape Visualization</span></a></li>
+      <?php endif; ?>
+      <?php if( $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li class="treeview" id="reports-treeview">
         <a href="javascript:void(0);">
           <i class="fa fa-area-chart nav-icon"></i>
@@ -35,13 +58,17 @@
           
         <ul class="treeview-menu">
           <li><a href="project_report.php"><i class="fa fa-circle-o nav-icon"></i> Project Report</a></li>
+          <?php if($user['type'] != 5): ?>
           <li><a href="purchase_report.php"><i class="fa fa-circle-o nav-icon"></i> Purchase Report</a></li>
           <li><a href="sales_report.php"><i class="fa fa-circle-o nav-icon"></i> Withdrawal Report</a></li>
+          <?php endif; ?>
           <li><a href="stock_report.php"><i class="fa fa-circle-o nav-icon"></i> Stock Report</a></li>
           <li><a href="material_report.php"><i class="fa fa-circle-o nav-icon"></i> Material Report</a></li>
-       
         </ul>
       </li>
+      <?php endif; ?>
+      <!-- Hide entire CAR TRACK section from Accounting (role 6) -->
+      <?php if($user['type'] != 6&& $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li class="header">CAR TRACK</li>
       <li class="treeview" id="cartrack-treeview">
         <a href="javascript:void(0);">
@@ -54,6 +81,10 @@
           <li><a href="track_list.php"><i class="fa fa-map-pin nav-icon"></i> Track Record List</a></li>
         </ul>
       </li>
+      <?php endif; ?>
+      
+      <!-- Hide entire EQUIPMENT section from Accounting (role 6) -->
+      <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5 && $user['type'] != 3 && $user['type'] != 2): ?>
       <li class="header">EQUIPMENT</li>
       <li><a href="equipmentDashboard.php"><i class="fas fa-tools nav-icon"></i> <span>Equipment Dashboard</span></a></li>
 
@@ -80,6 +111,7 @@
           <li><a href="category.php"><i class="fa fa-layer-group nav-icon"></i> Category</a></li>
         </ul>
       </li>
+      <?php endif; ?>
     </ul>
   </section>
 </aside>
@@ -250,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 500); // Wait 500ms to ensure everything else has loaded
 });
+
 $(document).ready(function() {
   // Toggle sidebar when the navbar toggle button is clicked
   $('.sidebar-toggle, [data-toggle="offcanvas"]').on('click', function(e) {

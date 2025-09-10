@@ -269,10 +269,11 @@ if(isset($_GET['year'])){
           unset($_SESSION['success']);
         }
       ?>
-      
+ 
       <!-- Inventory Summary -->
       <div class="summary-container">
         <!-- Total Products -->
+                <?php if($user['type'] != 9): ?>
         <div class="summary-box total">
           <div class="summary-icon">
             <i class="fa fa-boxes"></i>
@@ -285,12 +286,14 @@ if(isset($_GET['year'])){
               echo $row['total'];
             ?>
           </div>
-          <div class="summary-label">Total Products</div>
+          <div class="summary-label">Total Material</div>
+        <?php if($user['type'] != 7 && $user['type'] != 2): ?>
           <a href="view_stock.php?stock_status=all" class="btn btn-default btn-sm" style="margin-top: 15px;">
-            View All Products
+            View All Materials
           </a>
+          <?php endif; ?>
         </div>
-        
+              
         <!-- Low Stock Items -->
         <div class="summary-box low">
           <div class="summary-icon">
@@ -304,12 +307,15 @@ if(isset($_GET['year'])){
               echo $row['low_stock'];
             ?>
           </div>
+     
           <div class="summary-label">Low Stock Items</div>
+          <?php if($user['type'] != 7 && $user['type'] != 2): ?>
           <a href="view_stock.php?stock_status=low" class="btn btn-warning btn-sm" style="margin-top: 15px;">
             View Low Stock
           </a>
+          <?php endif; ?>
         </div>
-        
+            
         <!-- Out-of-Stock Items -->
         <div class="summary-box out">
           <div class="summary-icon">
@@ -324,13 +330,17 @@ if(isset($_GET['year'])){
             ?>
           </div>
           <div class="summary-label">Out-of-Stock Items</div>
+          <?php if($user['type'] != 7 && $user['type'] != 2 ): ?>
           <a href="view_stock.php?stock_status=out" class="btn btn-danger btn-sm" style="margin-top: 15px;">
             View Out-of-Stock
           </a>
+          <?php endif; ?>
         </div>
+           <?php endif; ?>
       </div>
       
-      <!-- Quick Actions -->
+      <!-- Quick Actions - Hidden from Accounting Role -->
+      <?php if($user['type'] != 6 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
       <div class="row">
         <div class="col-md-12">
           <div class="box stat-box floating-box">
@@ -339,6 +349,9 @@ if(isset($_GET['year'])){
             </div>
             <div class="box-body">
               <div class="quick-actions">
+                
+                <!-- Add New Stock - Hidden from Sales Role -->
+                <?php if($user['type'] != 9&& $user['type'] != 7): ?>
                 <div class="action-card">
                   <i class="fa fa-plus-circle"></i>
                   <h3>Add New Stock</h3>
@@ -347,7 +360,9 @@ if(isset($_GET['year'])){
                     <i class="fa fa-arrow-right"></i> Add Stock
                   </a>
                 </div>
+                <?php endif; ?>
                 
+                <!-- Create Purchase Order - Visible to all non-accounting users -->
                 <div class="action-card">
                   <i class="fa fa-file-invoice"></i>
                   <h3>Create Purchase Order</h3>
@@ -357,6 +372,8 @@ if(isset($_GET['year'])){
                   </a>
                 </div>
                 
+                <!-- Generate Reports - Hidden from Sales Role -->
+                <?php if($user['type'] != 9&& $user['type'] != 7): ?>
                 <div class="action-card">
                   <i class="fa fa-chart-line"></i>
                   <h3>Generate Reports</h3>
@@ -365,15 +382,18 @@ if(isset($_GET['year'])){
                     <i class="fa fa-arrow-right"></i> View Reports
                   </a>
                 </div>
+                <?php endif; ?>
               
               </div>
             </div>
           </div>
         </div>
       </div>
+      <?php endif; ?>
       
       <!-- Stock Alerts -->
       <div class="row">
+        <?php if($user['type'] != 9): ?>
         <div class="col-md-12">
           <div class="box stat-box floating-box">
             <div class="box-header with-border">
@@ -398,7 +418,9 @@ if(isset($_GET['year'])){
                     <th>Product</th>
                     <th>Category</th>
                     <th>Current Qty</th>
+                    <?php if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3): ?>
                     <th>Action</th>
+                    <?php endif; ?>
                   </tr>
                 </thead>
                 <tbody>
@@ -413,18 +435,24 @@ if(isset($_GET['year'])){
                         <tr>
                           <td>".$row['product_name']."</td>
                           <td>".$row['product_company']."</td>
-                          <td>0</td>
+                          <td>0</td>";
+                      
+                      // Only show action column for non-accounting users
+                      if($user['type'] != 6 && $user['type'] != 9&& $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2) {
+                        echo "
                           <td>
                             <a href='purchase_master.php?product_id=".$row['id']."' class='btn btn-xs btn-primary'>
                               <i class='fa fa-shopping-cart'></i> Reorder
                             </a>
-                          </td>
-                        </tr>
-                      ";
+                          </td>";
+                      }
+                      
+                      echo "</tr>";
                     }
                     
                     if ($query->num_rows == 0) {
-                      echo '<tr><td colspan="4" class="text-center text-muted">No out-of-stock items</td></tr>';
+                      $colspan = ($user['type'] != 6) ? '4' : '3';
+                      echo '<tr><td colspan="'.$colspan.'" class="text-center text-muted">No out-of-stock items</td></tr>';
                     }
                   ?>
                 </tbody>
@@ -445,7 +473,9 @@ if(isset($_GET['year'])){
                     <th>Product</th>
                     <th>Category</th>
                     <th>Current Qty</th>
+                    <?php if($user['type'] != 6 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2): ?>
                     <th>Action</th>
+                    <?php endif; ?>
                   </tr>
                 </thead>
                 <tbody>
@@ -461,18 +491,24 @@ if(isset($_GET['year'])){
                         <tr>
                           <td>".$row['product_name']."</td>
                           <td>".$row['product_company']."</td>
-                          <td>".$quantity."</td>
+                          <td>".$quantity."</td>";
+                      
+                      // Only show action column for non-accounting users
+                      if($user['type'] != 6 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2) {
+                        echo "
                           <td>
                             <a href='purchase_master.php?product_id=".$row['id']."' class='btn btn-xs btn-success'>
                               <i class='fa fa-plus'></i> Restock
                             </a>
-                          </td>
-                        </tr>
-                      ";
+                          </td>";
+                      }
+                      
+                      echo "</tr>";
                     }
                     
                     if ($query->num_rows == 0) {
-                      echo '<tr><td colspan="4" class="text-center text-muted">No low stock items</td></tr>';
+                      $colspan = ($user['type'] != 6 && $user['type'] != 7) ? '4' : '3';
+                      echo '<tr><td colspan="'.$colspan.'" class="text-center text-muted">No low stock items</td></tr>';
                     }
                   ?>
                 </tbody>
@@ -484,6 +520,7 @@ if(isset($_GET['year'])){
               </a>
             </div>
           </div>
+          <?php endif; ?>
         </div>
       </div>
     </section>
