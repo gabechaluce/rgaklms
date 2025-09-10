@@ -317,20 +317,26 @@ if ($materials_result && $materials_result->num_rows > 0) {
                       <td class="purchase-summary-total">₱<?php echo number_format($project_cost, 2); ?></td>
                     </tr>
                     <tr>
+                      <?php if($user['type'] != 3): ?>
                       <th>Material Expenses</th>
                       <td class="purchase-summary-total">₱<?php echo number_format($total_expenses, 2); ?></td>
+                      <?php endif; ?>
                     </tr>
                   </table>
                 </div>
                 <div class="col-md-4">
                   <table class="table table-bordered table-fit">
                     <tr>
+                      <?php if($user['type'] != 3): ?>
                       <th width="40%">Overhead Costs</th>
                       <td class="purchase-summary-total">₱<?php echo number_format($total_overhead_costs, 2); ?></td>
+                      <?php endif; ?>
                     </tr>
                     <tr>
+                      <?php if($user['type'] != 3): ?>
                       <th>Total Project Cost</th>
                       <td class="purchase-summary-total text-primary" style="font-size: 18px; font-weight: bold;">₱<?php echo number_format($grand_total, 2); ?></td>
+                      <?php endif; ?>
                     </tr>
                     <tr>
                       <th>Description</th>
@@ -422,39 +428,48 @@ if ($materials_result && $materials_result->num_rows > 0) {
                       <th>Category</th>
                       <th>Quantity</th>
                       <th>Unit</th>
+                      <?php if($user['type'] != 3): ?>
                       <th>Price</th>
+                      
                       <th>Total</th>
+                           <?php endif; ?>
                       <th>Project Name</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php if (!empty($rows)): ?>
-                      <?php 
-                      $filtered_total = 0;
-                      foreach($rows as $row): 
-                        $filtered_total += $row['total_amount'];
-                      ?>
-                        <tr>
-                          <td><?php echo date('M d, Y', strtotime($row['expense_date'])); ?></td>
-                          <td><?php echo htmlspecialchars($row['inventory_selection']); ?></td>
-                          <td><?php echo htmlspecialchars($row['product_name']); ?></td>
-                          <td><?php echo htmlspecialchars($row['product_company']); ?></td>
-                          <td class="text-center"><?php echo number_format($row['quantity'], 0); ?></td>
-                          <td><?php echo htmlspecialchars($row['unit']); ?></td>
-                          <td class="text-right">₱<?php echo number_format($row['price'], 2); ?></td>
-                          <td class="text-right">₱<?php echo number_format($row['total_amount'], 2); ?></td>
-                          <td><?php echo htmlspecialchars($row['project_name']); ?></td>
-                        </tr>
-                      <?php endforeach; ?>
-                    <?php else: ?>
-                      <tr><td colspan="9" class="text-center">No material expenses recorded for this project.</td></tr>
-                    <?php endif; ?>
+                  <?php if (!empty($rows)): ?>
+    <?php 
+    $filtered_total = 0;
+    foreach($rows as $row): 
+        $filtered_total += $row['total_amount'];
+    ?>
+        <tr>
+            <td><?php echo date('M d, Y', strtotime($row['expense_date'])); ?></td>
+            <td><?php echo htmlspecialchars($row['inventory_selection']); ?></td>
+            <td><?php echo htmlspecialchars($row['product_name']); ?></td>
+            <td><?php echo htmlspecialchars($row['product_company']); ?></td>
+            <td class="text-center"><?php echo number_format($row['quantity'], 0); ?></td>
+            <td><?php echo htmlspecialchars($row['unit']); ?></td>
+            <?php if($user['type'] != 3): ?>
+            <td class="text-right">₱<?php echo number_format($row['price'], 2); ?></td>
+       
+            <td class="text-right">₱<?php echo number_format($row['total_amount'], 2); ?></td>
+                 <?php endif; ?>
+            <td><?php echo htmlspecialchars($row['project_name']); ?></td>
+        </tr>
+    <?php endforeach; ?>
+<?php else: ?>
+    <tr><td colspan="<?php echo ($user['type'] != 3) ? '9' : '8'; ?>" class="text-center">No material expenses recorded for this project.</td></tr>
+<?php endif; ?>
                   </tbody>
                   <tfoot>
                     <tr>
+                      <?php if($user['type'] != 3): ?>
                       <th colspan="7" class="text-right">Material Expenses Total:</th>
                       <th class="text-right purchase-summary-total">₱<?php echo number_format($total_expenses, 2); ?></th>
+                    <?php endif; ?>
                       <th></th>
+                      
                     </tr>
                   </tfoot>
                 </table>
@@ -466,14 +481,17 @@ if ($materials_result && $materials_result->num_rows > 0) {
 
       <!-- Overhead Costs Section -->
       <div class="row">
+        <?php if($user['type'] != 3): ?>
         <div class="col-xs-12">
           <div class="box floating-box">
             <div class="box-header with-border">
               <h3 class="box-title">Overhead Costs</h3>
               <div class="pull-right">
+                <?php if($user['type'] != 5): ?>
                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addOverheadModal">
                   <i class="fa fa-plus"></i> Add Cost
                 </button>
+                <?php endif; ?>
               </div>
             </div>
             <div class="box-body">
@@ -529,53 +547,56 @@ if ($materials_result && $materials_result->num_rows > 0) {
             </div>
           </div>
         </div>
+        <?php endif; ?>
       </div>
 
       <!-- Project Summary -->
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="box floating-box">
+<!-- In Project Cost Summary section -->
+<?php if($user['type'] != 3): ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box floating-box">
             <div class="box-header with-border">
-              <h3 class="box-title">Project Cost Summary</h3>
+                <h3 class="box-title">Project Cost Summary</h3>
             </div>
             <div class="box-body">
-              <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                  <table class="table table-bordered">
-                    <tr>
-                      <th>Estimated Project Cost</th>
-                      <td class="text-right">₱<?php echo number_format($project_cost, 2); ?></td>
-                    </tr>
-                    <tr>
-                      <th>Material Expenses</th>
-                      <td class="text-right">₱<?php echo number_format($total_expenses, 2); ?></td>
-                    </tr>
-                    <tr>
-                      <th>Overhead Costs</th>
-                      <td class="text-right">₱<?php echo number_format($total_overhead_costs, 2); ?></td>
-                    </tr>
-                    <tr class="<?php echo ($grand_total > $project_cost) ? 'danger' : 'success'; ?>">
-                      <th style="font-size: 16px;">Total Project Cost</th>
-                      <td class="text-right purchase-summary-total" style="font-size: 18px; font-weight: bold;">₱<?php echo number_format($grand_total, 2); ?></td>
-                    </tr>
-                    <tr class="<?php echo ($grand_total > $project_cost) ? 'danger' : 'success'; ?>">
-                      <th>Cost Variance</th>
-                      <td class="text-right" style="font-weight: bold;">
-                        <?php 
-                        $variance = $project_cost - $grand_total;
-                        echo ($variance >= 0 ? '+' : '') . '₱' . number_format($variance, 2);
-                        echo ($variance >= 0) ? ' (Under Budget)' : ' (Over Budget)';
-                        ?>
-                      </td>
-                    </tr>
-                  </table>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Estimated Project Cost</th>
+                                <td class="text-right">₱<?php echo number_format($project_cost, 2); ?></td>
+                            </tr>
+                            <tr>
+                                <th>Material Expenses</th>
+                                <td class="text-right">₱<?php echo number_format($total_expenses, 2); ?></td>
+                            </tr>
+                            <tr>
+                                <th>Overhead Costs</th>
+                                <td class="text-right">₱<?php echo number_format($total_overhead_costs, 2); ?></td>
+                            </tr>
+                            <tr class="<?php echo ($grand_total > $project_cost) ? 'danger' : 'success'; ?>">
+                                <th style="font-size: 16px;">Total Project Cost</th>
+                                <td class="text-right purchase-summary-total" style="font-size: 18px; font-weight: bold;">₱<?php echo number_format($grand_total, 2); ?></td>
+                            </tr>
+                            <tr class="<?php echo ($grand_total > $project_cost) ? 'danger' : 'success'; ?>">
+                                <th>Cost Variance</th>
+                                <td class="text-right" style="font-weight: bold;">
+                                    <?php 
+                                    $variance = $project_cost - $grand_total;
+                                    echo ($variance >= 0 ? '+' : '') . '₱' . number_format($variance, 2);
+                                    echo ($variance >= 0) ? ' (Under Budget)' : ' (Over Budget)';
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-      
+    </div>
+</div>
+<?php endif; ?>
     </section>   
   </div>
 
