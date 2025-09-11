@@ -19,6 +19,9 @@
       <?php if($user['type'] != 6 && $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2 ): ?>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
       <?php endif; ?>
+           <?php if(  $user['type'] != 8): ?>
+      <li><a href="qoutation.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Qoutation</span></a></li>
+      <?php endif; ?>
       <?php if(  $user['type'] != 8): ?>
       <li><a href="projects.php"><i class="fas fa-project-diagram nav-icon"></i> <span>&nbsp;Projects</span></a></li>
       <?php endif; ?>
