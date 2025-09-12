@@ -77,7 +77,7 @@
   <td class="label-col">LOCATION:</td>
   <td><input type="text" id="location" placeholder="Enter location"></td>
   <td class="label-col">QUANTITY:</td>
-  <td><input type="text" id="quantity" value="1" placeholder="Enter quantity"></td>
+  <td><input type="text" id="quantity"  placeholder="Enter quantity"></td>
 </tr>
                       <tr>
                         <td class="label-col">REMARKS/FINISH:</td>
@@ -525,7 +525,7 @@ $(document).ready(function() {
     // Bind calculation events
     bindCalculationEvents();
     
-// Add this to your existing JavaScript section
+// Updated printWithoutHeaders function with 0.3in margin
 function printWithoutHeaders() {
     // First, ensure all input values are properly set as attributes before printing
     document.querySelectorAll('#printableArea input').forEach(function(input) {
@@ -551,7 +551,7 @@ function printWithoutHeaders() {
             <title>Material Costing Form</title>
             <style>
                 @page { 
-                    margin: 0.5in; 
+                    margin: 0.03in; 
                     size: auto;
                     @top-left { content: ""; }
                     @top-center { content: ""; }
@@ -603,57 +603,210 @@ function printWithoutHeaders() {
 $('#printBtn').click(function() {
     printWithoutHeaders();
 });
-    // PDF Download functionality
-   
+// Replace your existing Word download function with this one
+$('#downloadWordBtn').click(function() {
+    const projectName = $('#project_name').val() || 'Material_Costing_Form';
     
-    // Word Download functionality
-    $('#downloadWordBtn').click(function() {
-        const projectName = $('#project_name').val() || 'Material_Costing_Form';
-        const content = document.getElementById('printableArea').innerHTML;
-        
-        // Create a complete HTML document for Word
-        const htmlContent = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <title>Material Costing Form</title>
-                <style>
-                    body { font-family: Arial, sans-serif; margin: 20px; }
-                    .form-table { width: 100%; border-collapse: collapse; margin: 0; }
-                    .form-table td, .form-table th { border: 1px solid #000; padding: 5px; font-size: 12px; vertical-align: middle; }
-                    .form-table input { width: 100%; border: none; padding: 3px; font-size: 11px; }
-                    .section-header { background-color: #d3d3d3; font-weight: bold; text-align: center; padding: 8px; color: #ff0000; }
-                    .total-row { background-color: #ffff99; font-weight: bold; }
-                    .overall-total-row { background-color: #d3d3d3; font-weight: bold; font-size: 14px; }
-                    .label-col { background-color: #f9f9f9; font-weight: bold; text-align: right; padding-right: 10px; }
-                    .form-header { background-color: #fff; text-align: center; border-bottom: 2px solid #000; padding: 10px; font-weight: bold; font-size: 18px; }
-                    .quotation-form { background: white; border: 2px solid #000; }
-                    .signature-section { border-top: 2px solid #000; height: 80px; }
-                    .signature-cell { text-align: center; vertical-align: bottom; font-weight: bold; padding-bottom: 20px; }
-                    .number-input { text-align: right; }
-                    .center-text { text-align: center; }
-                </style>
-            </head>
-            <body>
-                ${content}
-            </body>
-            </html>
-        `;
-        
-        const blob = new Blob([htmlContent], {
-            type: 'application/msword'
-        });
-        
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = projectName + '_Material_Costing.doc';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    // First, ensure all input values are properly captured
+    document.querySelectorAll('#printableArea input').forEach(function(input) {
+        if (input.type === 'text' || input.type === 'number' || input.type === 'date') {
+            input.setAttribute('value', input.value);
+        }
     });
+    
+    // Special handling for signature fields
+    const preparedBy = document.getElementById('prepared_by');
+    const approvedBy = document.getElementById('approved_by');
+    if (preparedBy) preparedBy.setAttribute('value', preparedBy.value);
+    if (approvedBy) approvedBy.setAttribute('value', approvedBy.value);
+    
+    // Create a clone of the printable area
+    var clone = $('#printableArea').clone();
+    
+    // Remove all non-printable elements
+    clone.find('.no-print, .btn-remove-row').remove();
+    
+    // Convert inputs to styled spans that match the print appearance
+    clone.find('input').each(function() {
+        const $input = $(this);
+        const value = $input.val() || '';
+        const isReadonly = $input.attr('readonly');
+        const hasNumberClass = $input.hasClass('number-input');
+        
+        let replacement;
+        if (isReadonly) {
+            // Readonly fields (totals) - bold and right-aligned like in print
+            replacement = `<span style="display: inline-block; width: 100%; text-align: ${hasNumberClass ? 'right' : 'left'}; font-weight: bold; color: #000;">${value}</span>`;
+        } else if ($input.attr('id') === 'prepared_by' || $input.attr('id') === 'approved_by') {
+            // Signature fields - special styling to match print
+            replacement = `<span style="display: inline-block; width: 200px; border-bottom: 1px solid #000; text-align: center; min-height: 15px; background: transparent;">${value}</span>`;
+        } else {
+            // Regular input fields - match the print appearance
+            replacement = `<span style="display: inline-block; width: 100%; text-align: ${hasNumberClass ? 'right' : 'left'}; min-height: 14px; color: #000; background: transparent;">${value}</span>`;
+        }
+        
+        $input.replaceWith(replacement);
+    });
+    
+    // Create HTML document with EXACT print styles
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+              xmlns:w="urn:schemas-microsoft-com:office:word" 
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="utf-8">
+            <meta name="ProgId" content="Word.Document">
+            <meta name="Generator" content="Microsoft Word">
+            <title>Material Costing Form</title>
+            <!--[if gte mso 9]>
+            <xml>
+                <w:WordDocument>
+                    <w:View>Print</w:View>
+                    <w:Zoom>100</w:Zoom>
+                    <w:DoNotPromptForConvert/>
+                </w:WordDocument>
+            </xml>
+            <![endif]-->
+            <style>
+                /* Minimal margins to maximize table space */
+                @page { 
+                    margin-top: 0.2in;
+                    margin-left: 0.2in; 
+                    margin-right: 0.2in;
+                    margin-bottom: 0.5in;
+                    size: auto;
+                }
+                body { 
+                    font-family: Arial, sans-serif; 
+                    margin: 0; 
+                    padding: 10px; 
+                    background: white;
+                    width: 100%;
+                }
+                .form-table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 0; 
+                }
+                .form-table td, .form-table th { 
+                    border: 1px solid #000; 
+                    padding: 5px; 
+                    font-size: 12px; 
+                    vertical-align: middle;
+                    mso-border-alt: solid black .75pt;
+                }
+                .form-table span { 
+                    width: 100%; 
+                    border: none; 
+                    padding: 3px; 
+                    font-size: 11px; 
+                    background: transparent;
+                    color: #000 !important;
+                }
+                .section-header { 
+                    background-color: #d3d3d3; 
+                    font-weight: bold; 
+                    text-align: center; 
+                    padding: 8px; 
+                    color: #ff0000;
+                    mso-shading: #d3d3d3;
+                }
+                .total-row { 
+                    background-color: #ffff99; 
+                    font-weight: bold;
+                    mso-shading: #ffff99;
+                }
+                .overall-total-row { 
+                    background-color: #d3d3d3; 
+                    font-weight: bold; 
+                    font-size: 14px;
+                    mso-shading: #d3d3d3;
+                }
+                .label-col { 
+                    background-color: #f9f9f9; 
+                    font-weight: bold; 
+                    text-align: right; 
+                    padding-right: 10px;
+                    mso-shading: #f9f9f9;
+                }
+                .form-header { 
+                    background-color: #fff; 
+                    text-align: center; 
+                    border-bottom: 2px solid #000; 
+                    padding: 10px; 
+                    font-weight: bold; 
+                    font-size: 18px; 
+                }
+                .quotation-form { 
+                    background: white; 
+                    border: none; 
+                }
+                .signature-section { 
+                    border-top: 2px solid #000; 
+                    height: 80px; 
+                }
+                .signature-cell { 
+                    text-align: center; 
+                    vertical-align: bottom; 
+                    font-weight: bold; 
+                    padding-bottom: 20px; 
+                }
+                .number-input { 
+                    text-align: right; 
+                }
+                .center-text { 
+                    text-align: center; 
+                }
+                .no-print { 
+                    display: none; 
+                }
+                
+                /* Signature field specific styling to match print */
+                .signature-cell span {
+                    border: none;
+                    border-bottom: 1px solid #000;
+                    background: transparent;
+                    text-align: center;
+                    margin-top: 10px;
+                    width: 200px;
+                    font-size: 12px;
+                    padding: 2px;
+                    display: inline-block;
+                }
+                
+                /* Remove any borders from spans inside table cells */
+                .form-table td span {
+                    border: none !important;
+                    outline: none !important;
+                }
+                
+                /* Ensure readonly/total fields are bold */
+                .total-row span, .overall-total-row span {
+                    font-weight: bold !important;
+                }
+            </style>
+        </head>
+        <body>
+            ${clone.html()}
+        </body>
+        </html>
+    `;
+    
+    // Create and download the file
+    const blob = new Blob([htmlContent], {
+        type: 'application/msword;charset=utf-8'
+    });
+    
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${projectName}_Material_Costing_Form.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
 });
 
 function bindCalculationEvents() {
