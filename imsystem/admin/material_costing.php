@@ -42,7 +42,7 @@
         <div class="col-xs-12">
           <div class="box floating-box">
             <div class="box-header with-border">
-              <h3 class="box-title">Material Costing Form</h3>
+       
               <div class="pull-right">
                 <button id="printBtn" class="btn btn-info btn-sm">
                   <i class="fa fa-print"></i> Print
@@ -253,10 +253,10 @@
                       </tr>
                       
                       <!-- Final Total -->
-                      <tr>
-                        <td colspan="6" class="overall-total-row center-text">TOTAL AMOUNT (OVERALL W/ LABOR):</td>
-                        <td colspan="2" class="overall-total-row"><input type="number" id="grand_total" class="number-input" readonly style="font-size: 16px; font-weight: bold;"></td>
-                      </tr>
+                     <tr class="grand-total-row">
+    <td colspan="6" class="overall-total-row center-text">TOTAL AMOUNT (OVERALL W/ LABOR):</td>
+    <td colspan="2" class="overall-total-row"><input type="number" id="grand_total" class="number-input" readonly style="font-size: 16px; font-weight: bold;"></td>
+</tr>
                       
          
 <!-- Signature Section -->
@@ -436,9 +436,35 @@ body {
 .signature-cell input[type="text"]:focus {
     border-bottom: 2px solid #3c8dbc;
 }
+/* Add this CSS to your existing style section to make the grand total text red */
+
+.grand-total-row {
+    background-color: #d3d3d3;
+    font-weight: bold;
+    color: #ff0000; /* Red color for the text */
+}
+
+.grand-total-row input {
+    color: #ff0000; /* Red color for the input value */
+    font-weight: bold;
+}
+
+/* Alternative: If you want to target the specific cell with the text */
+.grand-total-text {
+    color: #ff0000;
+    font-weight: bold;
+}
 
 /* Print styles for signature fields */
 @media print {
+    .grand-total-row {
+        color: #ff0000 !important;
+    }
+    
+    .grand-total-row input {
+        color: #ff0000 !important;
+        font-weight: bold;
+    }
     .signature-cell input[type="text"] {
         border: none;
         border-bottom: 1px solid #000;
