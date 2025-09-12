@@ -75,12 +75,12 @@
                         <td class="label-col">DATE:</td>
                         <td><input type="date" id="date" value="<?php echo date('Y-m-d'); ?>"></td>
                       </tr>
-                      <tr>
-                        <td class="label-col">LOCATION:</td>
-                        <td><input type="text" id="location" placeholder="Enter location"></td>
-                        <td class="label-col">QUANTITY:</td>
-                        <td><input type="number" id="quantity" value="1" min="1"></td>
-                      </tr>
+<tr>
+  <td class="label-col">LOCATION:</td>
+  <td><input type="text" id="location" placeholder="Enter location"></td>
+  <td class="label-col">QUANTITY:</td>
+  <td><input type="text" id="quantity" value="1" placeholder="Enter quantity"></td>
+</tr>
                       <tr>
                         <td class="label-col">REMARKS/FINISH:</td>
                         <td><input type="text" id="remarks" placeholder="Enter remarks/finish"></td>
@@ -260,11 +260,22 @@
                         <td colspan="2" class="overall-total-row"><input type="number" id="grand_total" class="number-input" readonly style="font-size: 16px; font-weight: bold;"></td>
                       </tr>
                       
-                      <!-- Signature Section -->
-                      <tr class="signature-section">
-                        <td colspan="4" class="signature-cell">Prepared By:<br><br>________________________</td>
-                        <td colspan="4" class="signature-cell">Approved By:<br><br>________________________</td>
-                      </tr>
+         
+<!-- Signature Section -->
+<tr class="signature-section">
+  <td colspan="4" class="signature-cell">
+    Prepared By:<br>
+    <input type="text" id="prepared_by" placeholder="Enter name" style="border: none; border-bottom: 1px solid #000; background: transparent; text-align: center; margin-top: 10px; width: 200px;">
+    <br><br>
+   
+  </td>
+  <td colspan="4" class="signature-cell">
+    Approved By:<br>
+    <input type="text" id="approved_by" placeholder="Enter name" style="border: none; border-bottom: 1px solid #000; background: transparent; text-align: center; margin-top: 10px; width: 200px;">
+    <br><br>
+    
+  </td>
+</tr>
                     </table>
                   </div>
                 </div>
@@ -409,13 +420,41 @@ body {
     height: 80px;
 }
 
-.signature-cell {
+/* Add this CSS to your existing style section */
+
+/* Signature input fields styling */
+.signature-cell input[type="text"] {
+    border: none;
+    border-bottom: 1px solid #000;
+    background: transparent;
     text-align: center;
-    vertical-align: bottom;
-    font-weight: bold;
-    padding-bottom: 20px;
+    margin-top: 10px;
+    width: 200px;
+    font-size: 12px;
+    padding: 2px;
+    outline: none;
 }
 
+.signature-cell input[type="text"]:focus {
+    border-bottom: 2px solid #3c8dbc;
+}
+
+/* Print styles for signature fields */
+@media print {
+    .signature-cell input[type="text"] {
+        border: none;
+        border-bottom: 1px solid #000;
+        background: transparent;
+        color: #000 !important;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+    
+    .signature-cell input[type="text"]:after {
+        content: attr(value);
+    }
+}
 .number-input {
     text-align: right;
 }
@@ -488,11 +527,84 @@ $(document).ready(function() {
     // Bind calculation events
     bindCalculationEvents();
     
-    // Print functionality
-    $('#printBtn').click(function() {
-        window.print();
+// Add this to your existing JavaScript section
+function printWithoutHeaders() {
+    // First, ensure all input values are properly set as attributes before printing
+    document.querySelectorAll('#printableArea input').forEach(function(input) {
+        if (input.type === 'text' || input.type === 'number' || input.type === 'date') {
+            input.setAttribute('value', input.value);
+        }
     });
     
+    // Special handling for signature fields
+    const preparedBy = document.getElementById('prepared_by');
+    const approvedBy = document.getElementById('approved_by');
+    if (preparedBy) preparedBy.setAttribute('value', preparedBy.value);
+    if (approvedBy) approvedBy.setAttribute('value', approvedBy.value);
+    
+    // Create a new window for printing
+    var printWindow = window.open('', '_blank');
+    var printContent = document.getElementById('printableArea').innerHTML;
+    
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Material Costing Form</title>
+            <style>
+                @page { 
+                    margin: 0.5in; 
+                    size: auto;
+                    @top-left { content: ""; }
+                    @top-center { content: ""; }
+                    @top-right { content: ""; }
+                    @bottom-left { content: ""; }
+                    @bottom-center { content: ""; }
+                    @bottom-right { content: ""; }
+                }
+                body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                .form-table { width: 100%; border-collapse: collapse; margin: 0; }
+                .form-table td, .form-table th { border: 1px solid #000; padding: 5px; font-size: 12px; vertical-align: middle; }
+                .form-table input { 
+                    width: 100%; 
+                    border: none; 
+                    padding: 3px; 
+                    font-size: 11px; 
+                    background: transparent;
+                    color: #000 !important;
+                }
+                .section-header { background-color: #d3d3d3; font-weight: bold; text-align: center; padding: 8px; color: #ff0000; }
+                .total-row { background-color: #ffff99; font-weight: bold; }
+                .overall-total-row { background-color: #d3d3d3; font-weight: bold; font-size: 14px; }
+                .label-col { background-color: #f9f9f9; font-weight: bold; text-align: right; padding-right: 10px; }
+                .form-header { background-color: #fff; text-align: center; border-bottom: 2px solid #000; padding: 10px; font-weight: bold; font-size: 18px; }
+                .quotation-form { background: white; border: 2px solid #000; }
+                .signature-section { border-top: 2px solid #000; height: 80px; }
+                .signature-cell { text-align: center; vertical-align: bottom; font-weight: bold; padding-bottom: 20px; }
+                .number-input { text-align: right; }
+                .center-text { text-align: center; }
+                .no-print { display: none; }
+            </style>
+        </head>
+        <body>
+            ${printContent}
+        </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Add a small delay to ensure the content is fully loaded before printing
+    setTimeout(function() {
+        printWindow.print();
+        printWindow.close();
+    }, 100);
+}
+// Update the print button click handler
+$('#printBtn').click(function() {
+    printWithoutHeaders();
+});
     // PDF Download functionality
     $('#downloadPdfBtn').click(function() {
         const element = document.getElementById('printableArea');
