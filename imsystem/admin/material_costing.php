@@ -112,13 +112,13 @@
                           <td><input type="number" name="material_qty[]" class="number-input material-qty" min="0" step="0.01"></td>
                           <td><input type="text" name="material_uom[]" placeholder="UOM"></td>
                           <td><input type="number" name="material_price[]" class="number-input material-price" min="0" step="0.01"></td>
-                          <td><input type="number" name="material_total[]" class="number-input material-total" readonly></td>
+                          <td><input type="text" name="material_total[]" class="formatted-total material-total" readonly></td>
                           <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'materials')">×</button></td>
                         </tr>
                       </tbody>
                       <tr>
                         <td colspan="6" class="total-row center-text">TOTAL:</td>
-                        <td class="total-row"><input type="number" id="materials_total" class="number-input" readonly></td>
+                        <td class="total-row"><input type="text" id="materials_total" class="formatted-total" readonly></td>
                         <td class="no-print"><button type="button" class="btn-add-row" onclick="addRow('materials')">+</button></td>
                       </tr>
                       
@@ -144,13 +144,13 @@
                           <td><input type="number" name="accessory_qty[]" class="number-input accessory-qty" min="0" step="0.01"></td>
                           <td><input type="text" name="accessory_uom[]" placeholder="UOM"></td>
                           <td><input type="number" name="accessory_price[]" class="number-input accessory-price" min="0" step="0.01"></td>
-                          <td><input type="number" name="accessory_total[]" class="number-input accessory-total" readonly></td>
+                          <td><input type="text" name="accessory_total[]" class="formatted-total accessory-total" readonly></td>
                           <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'accessories')">×</button></td>
                         </tr>
                       </tbody>
                       <tr>
                         <td colspan="6" class="total-row center-text">TOTAL:</td>
-                        <td class="total-row"><input type="number" id="accessories_total" class="number-input" readonly></td>
+                        <td class="total-row"><input type="text" id="accessories_total" class="formatted-total" readonly></td>
                         <td class="no-print"><button type="button" class="btn-add-row" onclick="addRow('accessories')">+</button></td>
                       </tr>
                       
@@ -176,20 +176,20 @@
                           <td><input type="number" name="paint_qty[]" class="number-input paint-qty" min="0" step="0.01"></td>
                           <td><input type="text" name="paint_uom[]" placeholder="UOM"></td>
                           <td><input type="number" name="paint_price[]" class="number-input paint-price" min="0" step="0.01"></td>
-                          <td><input type="number" name="paint_total[]" class="number-input paint-total" readonly></td>
+                          <td><input type="text" name="paint_total[]" class="formatted-total paint-total" readonly></td>
                           <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'paint_materials')">×</button></td>
                         </tr>
                       </tbody>
                       <tr>
                         <td colspan="6" class="total-row center-text">TOTAL:</td>
-                        <td class="total-row"><input type="number" id="paint_materials_total" class="number-input" readonly></td>
+                        <td class="total-row"><input type="text" id="paint_materials_total" class="formatted-total" readonly></td>
                         <td class="no-print"><button type="button" class="btn-add-row" onclick="addRow('paint_materials')">+</button></td>
                       </tr>
                       
                       <!-- Overall Material Cost -->
                       <tr>
                         <td colspan="6" class="overall-total-row center-text">TOTAL AMOUNT (OVERALL) MATERIAL COST</td>
-                        <td colspan="2" class="overall-total-row"><input type="number" id="overall_material_cost" class="number-input" readonly></td>
+                        <td colspan="2" class="overall-total-row"><input type="text" id="overall_material_cost" class="formatted-total" readonly></td>
                       </tr>
                       
                       <!-- Labor Cost Section -->
@@ -212,13 +212,13 @@
                           <td><input type="number" name="days_per_person[]" class="number-input days-per-person" min="0" step="0.5"></td>
                           <td colspan="2"><input type="text" name="labor_uom[]" placeholder="UOM"></td>
                           <td><input type="number" name="labor_price[]" class="number-input labor-price" min="0" step="0.01"></td>
-                          <td><input type="number" name="labor_total[]" class="number-input labor-total" readonly></td>
+                          <td><input type="text" name="labor_total[]" class="formatted-total labor-total" readonly></td>
                           <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'labor')">×</button></td>
                         </tr>
                       </tbody>
                       <tr>
                         <td colspan="6" class="total-row center-text">TOTAL:</td>
-                        <td class="total-row"><input type="number" id="labor_total" class="number-input" readonly></td>
+                        <td class="total-row"><input type="text" id="labor_total" class="formatted-total" readonly></td>
                         <td class="no-print"><button type="button" class="btn-add-row" onclick="addRow('labor')">+</button></td>
                       </tr>
                       
@@ -242,20 +242,20 @@
                           <td><input type="number" name="jobout_pcs_mins[]" class="number-input jobout-pcs-mins" min="0" step="0.01"></td>
                           <td colspan="2"><input type="text" name="jobout_uom[]" placeholder="UOM (optional)"></td>
                           <td><input type="number" name="jobout_price[]" class="number-input jobout-price" min="0" step="0.01"></td>
-                          <td><input type="number" name="jobout_total[]" class="number-input jobout-total" readonly></td>
+                          <td><input type="text" name="jobout_total[]" class="formatted-total jobout-total" readonly></td>
                           <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'jobout')">×</button></td>
                         </tr>
                       </tbody>
                       <tr>
                         <td colspan="6" class="total-row center-text">TOTAL JOB OUT</td>
-                        <td class="total-row"><input type="number" id="jobout_total" class="number-input" readonly></td>
+                        <td class="total-row"><input type="text" id="jobout_total" class="formatted-total" readonly></td>
                         <td class="no-print"><button type="button" class="btn-add-row" onclick="addRow('jobout')">+</button></td>
                       </tr>
                       
                       <!-- Final Total -->
                      <tr class="grand-total-row">
     <td colspan="6" class="overall-total-row center-text">TOTAL AMOUNT (OVERALL W/ LABOR):</td>
-    <td colspan="2" class="overall-total-row"><input type="number" id="grand_total" class="number-input" readonly style="font-size: 16px; font-weight: bold;"></td>
+    <td colspan="2" class="overall-total-row"><input type="text" id="grand_total" class="formatted-total" readonly style="font-size: 14px; font-weight: bold;"></td>
 </tr>
                       
          
@@ -460,7 +460,6 @@ body {
     .grand-total-row {
         color: #ff0000 !important;
     }
-    
     .grand-total-row input {
         color: #ff0000 !important;
         font-weight: bold;
@@ -481,6 +480,11 @@ body {
 }
 .number-input {
     text-align: right;
+}
+
+.formatted-total {
+    text-align: right;
+    font-weight: bold;
 }
 
 .center-text {
@@ -544,6 +548,26 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
+// Function to format numbers with commas
+function formatNumberWithCommas(number) {
+    if (number === null || number === undefined || isNaN(number)) return '0.00';
+    
+    // Convert to number if it's a string
+    const num = typeof number === 'string' ? parseFloat(number) : number;
+    
+    // Format with commas and 2 decimal places
+    return num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Function to remove commas and convert back to number for calculations
+function parseFormattedNumber(formattedNumber) {
+    if (!formattedNumber) return 0;
+    return parseFloat(formattedNumber.replace(/,/g, ''));
+}
+
 $(document).ready(function() {
     // Initialize calculations on page load
     calculateAllTotals();
@@ -606,6 +630,7 @@ function printWithoutHeaders() {
                 .signature-section { border-top: 2px solid #000; height: 80px; }
                 .signature-cell { text-align: center; vertical-align: bottom; font-weight: bold; padding-bottom: 20px; }
                 .number-input { text-align: right; }
+                .formatted-total { text-align: right; font-weight: bold; }
                 .center-text { text-align: center; }
                 .no-print { display: none; }
             </style>
@@ -658,11 +683,12 @@ $('#downloadWordBtn').click(function() {
         const value = $input.val() || '';
         const isReadonly = $input.attr('readonly');
         const hasNumberClass = $input.hasClass('number-input');
+        const isFormattedTotal = $input.hasClass('formatted-total');
         
         let replacement;
         if (isReadonly) {
             // Readonly fields (totals) - bold and right-aligned like in print
-            replacement = `<span style="display: inline-block; width: 100%; text-align: ${hasNumberClass ? 'right' : 'left'}; font-weight: bold; color: #000;">${value}</span>`;
+            replacement = `<span style="display: inline-block; width: 100%; text-align: ${isFormattedTotal ? 'right' : 'left'}; font-weight: bold; color: #000;">${value}</span>`;
         } else if ($input.attr('id') === 'prepared_by' || $input.attr('id') === 'approved_by') {
             // Signature fields - special styling to match print
             replacement = `<span style="display: inline-block; width: 200px; border-bottom: 1px solid #000; text-align: center; min-height: 15px; background: transparent;">${value}</span>`;
@@ -781,6 +807,10 @@ $('#downloadWordBtn').click(function() {
                 .number-input { 
                     text-align: right; 
                 }
+                .formatted-total { 
+                    text-align: right; 
+                    font-weight: bold;
+                }
                 .center-text { 
                     text-align: center; 
                 }
@@ -882,22 +912,22 @@ function calculateRowTotal(row, type) {
         qty = parseFloat(row.find('.material-qty').val()) || 0;
         price = parseFloat(row.find('.material-price').val()) || 0;
         total = qty * price;
-        row.find('.material-total').val(total.toFixed(2));
+        row.find('.material-total').val(formatNumberWithCommas(total));
     } else if (type === 'accessory') {
         qty = parseFloat(row.find('.accessory-qty').val()) || 0;
         price = parseFloat(row.find('.accessory-price').val()) || 0;
         total = qty * price;
-        row.find('.accessory-total').val(total.toFixed(2));
+        row.find('.accessory-total').val(formatNumberWithCommas(total));
     } else if (type === 'paint') {
         qty = parseFloat(row.find('.paint-qty').val()) || 0;
         price = parseFloat(row.find('.paint-price').val()) || 0;
         total = qty * price;
-        row.find('.paint-total').val(total.toFixed(2));
+        row.find('.paint-total').val(formatNumberWithCommas(total));
     } else if (type === 'jobout') {
         qty = parseFloat(row.find('.jobout-pcs-mins').val()) || 0;
         price = parseFloat(row.find('.jobout-price').val()) || 0;
         total = qty * price;
-        row.find('.jobout-total').val(total.toFixed(2));
+        row.find('.jobout-total').val(formatNumberWithCommas(total));
     }
 }
 
@@ -906,7 +936,7 @@ function calculateLaborRowTotal(row) {
     const daysPerPerson = parseFloat(row.find('.days-per-person').val()) || 0;
     const price = parseFloat(row.find('.labor-price').val()) || 0;
     const total = personCount * daysPerPerson * price;
-    row.find('.labor-total').val(total.toFixed(2));
+    row.find('.labor-total').val(formatNumberWithCommas(total));
 }
 
 function calculateSectionTotal(section) {
@@ -926,26 +956,26 @@ function calculateSectionTotal(section) {
     }
     
     $(selector).each(function() {
-        total += parseFloat($(this).val()) || 0;
+        total += parseFormattedNumber($(this).val()) || 0;
     });
     
-    $('#' + section + '_total').val(total.toFixed(2));
+    $('#' + section + '_total').val(formatNumberWithCommas(total));
 }
 
 function calculateOverallMaterialCost() {
-    const materialsTotal = parseFloat($('#materials_total').val()) || 0;
-    const accessoriesTotal = parseFloat($('#accessories_total').val()) || 0;
-    const paintTotal = parseFloat($('#paint_materials_total').val()) || 0;
+    const materialsTotal = parseFormattedNumber($('#materials_total').val()) || 0;
+    const accessoriesTotal = parseFormattedNumber($('#accessories_total').val()) || 0;
+    const paintTotal = parseFormattedNumber($('#paint_materials_total').val()) || 0;
     const overallMaterialCost = materialsTotal + accessoriesTotal + paintTotal;
-    $('#overall_material_cost').val(overallMaterialCost.toFixed(2));
+    $('#overall_material_cost').val(formatNumberWithCommas(overallMaterialCost));
 }
 
 function calculateGrandTotal() {
-    const overallMaterialCost = parseFloat($('#overall_material_cost').val()) || 0;
-    const laborTotal = parseFloat($('#labor_total').val()) || 0;
-    const joboutTotal = parseFloat($('#jobout_total').val()) || 0;
+    const overallMaterialCost = parseFormattedNumber($('#overall_material_cost').val()) || 0;
+    const laborTotal = parseFormattedNumber($('#labor_total').val()) || 0;
+    const joboutTotal = parseFormattedNumber($('#jobout_total').val()) || 0;
     const grandTotal = overallMaterialCost + laborTotal + joboutTotal;
-    $('#grand_total').val(grandTotal.toFixed(2));
+    $('#grand_total').val(formatNumberWithCommas(grandTotal));
 }
 
 function calculateAllTotals() {
@@ -990,7 +1020,7 @@ function addRow(section) {
                 <td><input type="number" name="material_qty[]" class="number-input material-qty" min="0" step="0.01"></td>
                 <td><input type="text" name="material_uom[]" placeholder="UOM"></td>
                 <td><input type="number" name="material_price[]" class="number-input material-price" min="0" step="0.01"></td>
-                <td><input type="number" name="material_total[]" class="number-input material-total" readonly></td>
+                <td><input type="text" name="material_total[]" class="formatted-total material-total" readonly></td>
                 <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'materials')">×</button></td>
             </tr>
         `;
@@ -1004,7 +1034,7 @@ function addRow(section) {
                 <td><input type="number" name="accessory_qty[]" class="number-input accessory-qty" min="0" step="0.01"></td>
                 <td><input type="text" name="accessory_uom[]" placeholder="UOM"></td>
                 <td><input type="number" name="accessory_price[]" class="number-input accessory-price" min="0" step="0.01"></td>
-                <td><input type="number" name="accessory_total[]" class="number-input accessory-total" readonly></td>
+                <td><input type="text" name="accessory_total[]" class="formatted-total accessory-total" readonly></td>
                 <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'accessories')">×</button></td>
             </tr>
         `;
@@ -1018,7 +1048,7 @@ function addRow(section) {
                 <td><input type="number" name="paint_qty[]" class="number-input paint-qty" min="0" step="0.01"></td>
                 <td><input type="text" name="paint_uom[]" placeholder="UOM"></td>
                 <td><input type="number" name="paint_price[]" class="number-input paint-price" min="0" step="0.01"></td>
-                <td><input type="number" name="paint_total[]" class="number-input paint-total" readonly></td>
+                <td><input type="text" name="paint_total[]" class="formatted-total paint-total" readonly></td>
                 <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'paint_materials')">×</button></td>
             </tr>
         `;
@@ -1031,7 +1061,7 @@ function addRow(section) {
                 <td><input type="number" name="days_per_person[]" class="number-input days-per-person" min="0" step="0.5"></td>
                 <td colspan="2"><input type="text" name="labor_uom[]" placeholder="UOM"></td>
                 <td><input type="number" name="labor_price[]" class="number-input labor-price" min="0" step="0.01"></td>
-                <td><input type="number" name="labor_total[]" class="number-input labor-total" readonly></td>
+                <td><input type="text" name="labor_total[]" class="formatted-total labor-total" readonly></td>
                 <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'labor')">×</button></td>
             </tr>
         `;
@@ -1044,7 +1074,7 @@ function addRow(section) {
                 <td><input type="number" name="jobout_pcs_mins[]" class="number-input jobout-pcs-mins" min="0" step="0.01"></td>
                 <td colspan="2"><input type="text" name="jobout_uom[]" placeholder="UOM (optional)"></td>
                 <td><input type="number" name="jobout_price[]" class="number-input jobout-price" min="0" step="0.01"></td>
-                <td><input type="number" name="jobout_total[]" class="number-input jobout-total" readonly></td>
+                <td><input type="text" name="jobout_total[]" class="formatted-total jobout-total" readonly></td>
                 <td class="no-print"><button type="button" class="btn-remove-row" onclick="removeRow(this, 'jobout')">×</button></td>
             </tr>
         `;
