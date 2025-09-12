@@ -47,9 +47,7 @@
                 <button id="printBtn" class="btn btn-info btn-sm">
                   <i class="fa fa-print"></i> Print
                 </button>
-                <button id="downloadPdfBtn" class="btn btn-danger btn-sm">
-                  <i class="fa fa-file-pdf-o"></i> Download PDF
-                </button>
+               
                 <button id="downloadWordBtn" class="btn btn-primary btn-sm">
                   <i class="fa fa-file-word-o"></i> Download Word
                 </button>
@@ -606,39 +604,7 @@ $('#printBtn').click(function() {
     printWithoutHeaders();
 });
     // PDF Download functionality
-    $('#downloadPdfBtn').click(function() {
-        const element = document.getElementById('printableArea');
-        const projectName = $('#project_name').val() || 'Material_Costing_Form';
-        
-        html2canvas(element, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true
-        }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'mm', 'a4');
-            
-            const imgWidth = 297; // A4 landscape width
-            const pageHeight = 210; // A4 landscape height
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            
-            let position = 0;
-            
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-            
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-            
-            pdf.save(projectName + '_Material_Costing.pdf');
-        });
-    });
+   
     
     // Word Download functionality
     $('#downloadWordBtn').click(function() {
