@@ -10,11 +10,6 @@ if (!isset($_SESSION['login_id'])) {
     exit();
 }
 
-// NEW CODE: Redirect Project Managers directly to the project workflow
-if (isset($_SESSION['login_type']) && $_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2   || $_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 4  || $_SESSION['login_type'] == 5 || $_SESSION['login_type'] == 6 || $_SESSION['login_type'] == 7 || $_SESSION['login_type'] == 8|| $_SESSION['login_type'] == 9|| $_SESSION['login_type'] == 10) {
-    header("Location: ./projectworkflow/index.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
