@@ -19,7 +19,7 @@
       <?php if($user['type'] != 6 && $user['type'] != 9 && $user['type'] != 7 && $user['type'] != 5  && $user['type'] != 3 && $user['type'] != 2 ): ?>
       <li><a href="inventory_selection.php"><i class="fas fa-warehouse nav-icon"></i> <span>&nbsp;Inventory Selection</span></a></li>
       <?php endif; ?>
-           <?php if(  $user['type'] != 8): ?>
+           <?php if(  $user['type'] != 8 && $user['type'] != 4  && $user['type'] != 5 && $user['type'] != 6): ?>
       <li><a href="material_costing.php"><i class="	fas fa-pen-square nav-icon"></i> <span>&nbsp;Qoutation</span></a></li>
       <?php endif; ?>
       <?php if(  $user['type'] != 8): ?>
