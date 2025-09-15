@@ -615,6 +615,7 @@ ob_end_flush();
                     $(this).find('.alert-danger').remove();
                 }
                 
+                
                 $.ajax({
                     url: './projectworkflow/ajax.php?action=login',
                     method: 'POST',
