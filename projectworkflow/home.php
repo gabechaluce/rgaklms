@@ -500,6 +500,7 @@ foreach ($notifications as $notification) {
     </div>
 </div>
 
+
 <style>
 body, .wrapper, .content-wrapper {
     background-color:#f4f1ed !important;
